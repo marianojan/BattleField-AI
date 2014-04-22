@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2013, Ing. Gabriel Barrera <gmbarrera@gmail.com>
+ * Copyright (c) 2012-2014, Ing. Gabriel Barrera <gmbarrera@gmail.com>
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above 
@@ -49,4 +49,15 @@ class WarriorWrapper {
         else
             warrior.setHealth(warrior.getHealth() - damage);
     }
+    
+    void increaseHealth(int value) {
+    	
+    	System.out.print("HEALTH BOOSTER!!!   " + warrior.getHealth());
+    	
+    	warrior.setHealth(warrior.getHealth() + value);
+    	
+    	System.out.println("  " +  warrior.getHealth());
+    }
+    
+    
 }

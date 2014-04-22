@@ -66,5 +66,19 @@ public class FieldCell {
         
         return si;
     }
+    
+//    public boolean equals(Object other) {
+//    	if (other == null)
+//    		return false;
+//    	
+//    	if (!(other instanceof FieldCell)
+//    			)
+//    		return false;
+//    	
+//    	if (((FieldCell)other).x != this.x || ((FieldCell)other).y != this.y)
+//    		return false;
+//    	
+//    	return true;
+//    }
 
 }
