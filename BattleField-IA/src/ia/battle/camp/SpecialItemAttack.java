@@ -28,11 +28,8 @@ public class SpecialItemAttack extends SpecialItem {
 
     @Override
     void affectWarrior(WarriorWrapper warriorWrapper) {
-        // TODO Afectar a los warrior con los special Items
-        
-    	
-    	
+
+    	warriorWrapper.getWarrior().setStrength(warriorWrapper.getWarrior().getStrength() + value);
     	
     }
-
 }

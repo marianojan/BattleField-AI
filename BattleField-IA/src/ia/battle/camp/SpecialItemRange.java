@@ -28,7 +28,7 @@ public class SpecialItemRange extends SpecialItem {
 
     @Override
     void affectWarrior(WarriorWrapper warriorWrapper) {
-        // TODO Auto-generated method stub
+    	warriorWrapper.getWarrior().setRange(warriorWrapper.getWarrior().getRange() + value);
         
     }
 

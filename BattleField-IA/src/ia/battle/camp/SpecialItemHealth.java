@@ -28,7 +28,7 @@ public class SpecialItemHealth extends SpecialItem {
 
     void affectWarrior(WarriorWrapper warriorWrapper) {
         
-    	warriorWrapper.increaseHealth(value);
+    	warriorWrapper.getWarrior().setHealth(warriorWrapper.getWarrior().getHealth() + value);
         
     }
 }

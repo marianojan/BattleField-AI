@@ -48,6 +48,7 @@ public class BattleFieldSetup extends JFrame {
     private Frame frame;
     private boolean inFight;
 
+    //TODO: Persistir los jar seleccionados y las clases
 
     public BattleFieldSetup() {
 

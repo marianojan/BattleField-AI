@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2013, Ing. Gabriel Barrera <gmbarrera@gmail.com>
+ * Copyright (c) 2012-2014, Ing. Gabriel Barrera <gmbarrera@gmail.com>
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above 
@@ -121,16 +121,7 @@ public abstract class Warrior {
 		return position;
 	}
 
-	public void setPosition(FieldCell position) throws RuleException {
-
-		// TODO: Validar que la invocacion provenga del BattleField
-
-		// StackTraceElement[] stackTraceElements =
-		// Thread.currentThread().getStackTrace();
-		// if
-		// (!stackTraceElements[1].getClassName().equals(BattleField.class.getName()))
-		// throw new RuleException();
-
+	void setPosition(FieldCell position) throws RuleException {
 		this.position = position;
 	}
 

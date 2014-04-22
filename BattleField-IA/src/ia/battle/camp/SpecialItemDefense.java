@@ -28,8 +28,7 @@ public class SpecialItemDefense extends SpecialItem {
 
     @Override
     void affectWarrior(WarriorWrapper warriorWrapper) {
-        // TODO Auto-generated method stub
-        
+    	warriorWrapper.getWarrior().setDefense(warriorWrapper.getWarrior().getDefense() + value);
     }
 
 }

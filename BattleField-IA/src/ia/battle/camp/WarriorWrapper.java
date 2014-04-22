@@ -49,15 +49,4 @@ class WarriorWrapper {
         else
             warrior.setHealth(warrior.getHealth() - damage);
     }
-    
-    void increaseHealth(int value) {
-    	
-    	System.out.print("HEALTH BOOSTER!!!   " + warrior.getHealth());
-    	
-    	warrior.setHealth(warrior.getHealth() + value);
-    	
-    	System.out.println("  " +  warrior.getHealth());
-    }
-    
-    
 }
