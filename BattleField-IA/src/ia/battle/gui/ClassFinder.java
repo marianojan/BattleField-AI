@@ -115,4 +115,13 @@ public class ClassFinder extends JPanel {
 			e.printStackTrace();
 		}
 	}
+
+	public void getSelectedJarFile(String url1) {
+		url.setText(url1.substring(6));
+		fillComboBox();
+	}
+
+	public void getSelectedClassName(String class1) {
+		comboBox.setSelectedItem(class1);
+	}
 }

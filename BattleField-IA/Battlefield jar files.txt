@@ -1,4 +1,4 @@
+file:/C:/Users/Gabriel/Documents/grupo_00.jar
+ia.battle.example.AndrewWarriorManager
 file:/C:/Users/Gabriel/Documents/grupo_01.jar
 ia.battle.nacho.NachoWarriorManager
-file:/C:/Users/Gabriel/Documents/grupo_02.jar
-ia.battle.example.ElephantWarriorManager

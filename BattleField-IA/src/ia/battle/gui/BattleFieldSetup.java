@@ -80,6 +80,8 @@ public class BattleFieldSetup extends JFrame {
             }
         });
 
+        loadJarSelection();
+        
         this.add(startFight, BorderLayout.SOUTH);
     }
 
@@ -222,7 +224,6 @@ public class BattleFieldSetup extends JFrame {
     	}
     }
     
-  //TODO: Persistir los jar seleccionados y las clases
     private void loadJarSelection() {
     	
     	try {
@@ -239,8 +240,11 @@ public class BattleFieldSetup extends JFrame {
     			
     			br.close();
     			
-    			
-    			
+    			finderWarriorManager1.getSelectedJarFile(url1);
+    			finderWarriorManager2.getSelectedJarFile(url2);
+    	    	
+    	    	finderWarriorManager1.getSelectedClassName(class1);
+    	    	finderWarriorManager2.getSelectedClassName(class2);
     		}
     		
     	} catch (Exception ex) {
