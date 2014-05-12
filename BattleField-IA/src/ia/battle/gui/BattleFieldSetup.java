@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2013, Ing. Gabriel Barrera <gmbarrera@gmail.com>
+ * Copyright (c) 2012-2014, Ing. Gabriel Barrera <gmbarrera@gmail.com>
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above 
@@ -26,6 +26,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.net.URL;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -47,8 +52,6 @@ public class BattleFieldSetup extends JFrame {
     
     private Frame frame;
     private boolean inFight;
-
-    //TODO: Persistir los jar seleccionados y las clases
 
     public BattleFieldSetup() {
 
@@ -82,6 +85,8 @@ public class BattleFieldSetup extends JFrame {
 
     private void figthClicked() {
 
+    	saveJarSelection();
+    	
         WarriorLoader warriorLoader = new WarriorLoader();
         WarriorManager wm;
         
@@ -195,6 +200,54 @@ public class BattleFieldSetup extends JFrame {
         }
     }
 
+    private void saveJarSelection() {
+    	
+    	URL urlJar1 = finderWarriorManager1.getSelectedJarFile();
+    	URL urlJar2 = finderWarriorManager2.getSelectedJarFile();
+    	
+    	String className1 = finderWarriorManager1.getSelectedClassName();
+    	String className2 = finderWarriorManager2.getSelectedClassName();
+    	
+    	try {
+    		
+    		FileWriter fw = new FileWriter("Battlefield jar files.txt");
+    		fw.write(urlJar1.toString() + "\n");
+    		fw.write(className1.toString() + "\n");
+    		fw.write(urlJar2.toString() + "\n");
+    		fw.write(className2.toString() + "\n");
+    		fw.close();
+    		
+    	} catch (Exception ex) {
+    		System.err.println("Error grabando: " + ex);
+    	}
+    }
+    
+  //TODO: Persistir los jar seleccionados y las clases
+    private void loadJarSelection() {
+    	
+    	try {
+    		
+    		File f = new File("Battlefield jar files.txt");
+    		
+    		if (f.exists()) {
+    			BufferedReader br = new BufferedReader(new FileReader( f));
+    			
+    			String url1 = br.readLine();
+    			String class1 = br.readLine();
+    			String url2 = br.readLine();
+    			String class2 = br.readLine();
+    			
+    			br.close();
+    			
+    			
+    			
+    		}
+    		
+    	} catch (Exception ex) {
+    		System.err.println("Error leyendo: " + ex);
+    	}
+    }
+    
     public static void main(String[] args) {
         SwingConsole.run(new BattleFieldSetup(), 600, 400, true, "IA");
     }

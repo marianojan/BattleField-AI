@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2013, Ing. Gabriel Barrera <gmbarrera@gmail.com>
+ * Copyright (c) 2012-2014, Ing. Gabriel Barrera <gmbarrera@gmail.com>
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above 
@@ -21,12 +21,14 @@ public class WarriorData {
 	private int health;
 	private String name;
 	private boolean inRange;
+	private int warriorNumber;
 
-	WarriorData(FieldCell fieldCell, int health, String name, boolean inRange) {
+	WarriorData(FieldCell fieldCell, int health, String name, boolean inRange, int warriorNumber) {
 		this.fieldCell = fieldCell;
 		this.health = health;
 		this.name = name;
 		this.inRange = inRange;
+		this.warriorNumber = warriorNumber;
 	}
 
 	public FieldCell getFieldCell() {
@@ -44,5 +46,8 @@ public class WarriorData {
 	public boolean getInRange() {
 	    return inRange;
 	}
-
+	
+	public int getWarriorNumber() {
+		return warriorNumber;
+	}
 }

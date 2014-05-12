@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, Ing. Gabriel Barrera <gmbarrera@gmail.com>
+ * Copyright (c) 2012-2014, Ing. Gabriel Barrera <gmbarrera@gmail.com>
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above 
@@ -43,4 +43,10 @@ public final class ConfigurationManager {
 	public int getActionsPerTurn() {
 		return 3;
 	}
+	
+	public int getMaxWarriorPerBattle() {
+		return 3;
+	}
+	
+	
 }

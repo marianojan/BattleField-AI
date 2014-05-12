@@ -25,7 +25,7 @@ import java.util.Random;
  vida        20      10
  defensa     20      20
  velocidad   20      25
- rango       20      25
+ rango        5       5
  ataque      20      20
  */
 
@@ -68,9 +68,9 @@ class SpecialItemFactory {
 
         case 3:
             if (rnd.nextFloat() > 0.9f)
-                value = -1 * rnd.nextInt(25);
+                value = -1 * rnd.nextInt(5);
             else
-                value = rnd.nextInt(20);
+                value = rnd.nextInt(5);
 
             si = new SpecialItemRange(value);
             break;
