@@ -44,222 +44,228 @@ import javax.swing.JPanel;
 
 public class BattleFieldSetup extends JFrame {
 
-    /**
+	/**
      * 
      */
-    private static final long serialVersionUID = 693518024717393345L;
-    private JLabel title;
-    private JButton startFight;
-    private ClassFinder finderWarriorManager1, finderWarriorManager2;
-    
-    private Frame frame;
-    private boolean inFight;
+	private static final long serialVersionUID = 693518024717393345L;
+	private JLabel title;
+	private JButton startFight;
+	private ClassFinder finderWarriorManager1, finderWarriorManager2;
 
-    public BattleFieldSetup() {
+	private Frame frame;
+	private boolean inFight;
 
-        title = new JLabel("IA - Battle Field Agents", JLabel.CENTER);
-        title.setBorder(BorderFactory.createEtchedBorder());
+	public BattleFieldSetup() {
 
-        this.add(title, BorderLayout.NORTH);
+		title = new JLabel("IA - Battle Field Agents", JLabel.CENTER);
+		title.setBorder(BorderFactory.createEtchedBorder());
 
-        JPanel panel = new JPanel();
-        panel.setBorder(BorderFactory.createEtchedBorder());
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		this.add(title, BorderLayout.NORTH);
 
-        finderWarriorManager1 = new ClassFinder("Seleccione el .jar del Warrior Manager 1");
-        panel.add(finderWarriorManager1);
+		JPanel panel = new JPanel();
+		panel.setBorder(BorderFactory.createEtchedBorder());
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-        finderWarriorManager2 = new ClassFinder("Seleccione el .jar del Warrior Manager 2");
-        panel.add(finderWarriorManager2);
+		finderWarriorManager1 = new ClassFinder("Seleccione el .jar del Warrior Manager 1");
+		panel.add(finderWarriorManager1);
 
-        this.add(panel);
+		finderWarriorManager2 = new ClassFinder("Seleccione el .jar del Warrior Manager 2");
+		panel.add(finderWarriorManager2);
 
-        startFight = new JButton("Fight!");
-        startFight.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                figthClicked();
-            }
-        });
+		this.add(panel);
 
-        loadJarSelection();
-        
-        this.add(startFight, BorderLayout.SOUTH);
-    }
+		startFight = new JButton("Fight!");
+		startFight.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				figthClicked();
+			}
+		});
 
-    private void figthClicked() {
+		loadJarSelection();
 
-    	saveJarSelection();
-    	
-        WarriorLoader warriorLoader = new WarriorLoader();
-        WarriorManager wm;
-        
-        try {
+		this.add(startFight, BorderLayout.SOUTH);
+	}
 
-            wm = warriorLoader.createWarriorManager(finderWarriorManager1.getSelectedJarFile(),
-                    finderWarriorManager1.getSelectedClassName());
-            
-            BattleField.getInstance().addWarriorManager(wm);
+	private void figthClicked() {
 
-            wm = warriorLoader.createWarriorManager(finderWarriorManager2.getSelectedJarFile(),
-                    finderWarriorManager2.getSelectedClassName());
+		saveJarSelection();
 
-            BattleField.getInstance().addWarriorManager(wm);
+		WarriorLoader warriorLoader = new WarriorLoader();
+		WarriorManager wm;
 
-            BattleField.getInstance().addListener(new BattleFieldListener() {
+		try {
 
-                @Override
-                public void startFight() {
+			wm = warriorLoader.createWarriorManager(finderWarriorManager1.getSelectedJarFile(),
+					finderWarriorManager1.getSelectedClassName());
 
-                    inFight = true;
-                    
-                    if (frame != null) {
-                        frame.dispose();
-                        frame = null;
-                    }
+			BattleField.getInstance().addWarriorManager(wm);
 
-                    frame = new Frame(BattleField.getInstance(), 16, 16);
-                    frame.setSize(1024, 720);
-                    frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-                    frame.setVisible(true);
+			wm = warriorLoader.createWarriorManager(finderWarriorManager2.getSelectedJarFile(),
+					finderWarriorManager2.getSelectedClassName());
 
-                    frame.addWindowListener(new WindowListener() {
+			BattleField.getInstance().addWarriorManager(wm);
 
-                        @Override
-                        public void windowActivated(WindowEvent arg0) {
-                        }
+			BattleField.getInstance().addListener(new BattleFieldListener() {
 
-                        @Override
-                        public void windowClosed(WindowEvent arg0) {
-                        }
+				@Override
+				public void startFight() {
 
-                        @Override
-                        public void windowClosing(WindowEvent arg0) {
+					inFight = true;
 
-                            if (JOptionPane.showConfirmDialog(frame, "Está seguro de finalizar la batalla?",
-                                    "Confirme Acción", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
-                                inFight = false;
-                                frame.dispose();
-                            }
-                        }
+					if (frame != null) {
+						frame.dispose();
+						frame = null;
+					}
 
-                        @Override
-                        public void windowDeactivated(WindowEvent arg0) {
-                        }
+					frame = new Frame(BattleField.getInstance(), 16, 16);
+					frame.setSize(1024, 720);
+					frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+					frame.setVisible(true);
 
-                        @Override
-                        public void windowDeiconified(WindowEvent arg0) {
-                        }
+					frame.addWindowListener(new WindowListener() {
 
-                        @Override
-                        public void windowIconified(WindowEvent arg0) {
-                        }
+						@Override
+						public void windowActivated(WindowEvent arg0) {
+						}
 
-                        @Override
-                        public void windowOpened(WindowEvent arg0) {
-                        }
+						@Override
+						public void windowClosed(WindowEvent arg0) {
+						}
 
-                    });
-                }
+						@Override
+						public void windowClosing(WindowEvent arg0) {
 
-                public void tickLapsed(long tick) {
+							if (JOptionPane.showConfirmDialog(frame, "Está seguro de finalizar la batalla?",
+									"Confirme Acción", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
+								inFight = false;
+								frame.dispose();
+							}
+						}
 
-                }
+						@Override
+						public void windowDeactivated(WindowEvent arg0) {
+						}
 
-                public void turnLapsed(long tick, int turnNumber, Warrior warrior) {
-                    frame.repaint();
-                }
+						@Override
+						public void windowDeiconified(WindowEvent arg0) {
+						}
 
-                public boolean continueFighting() {
-                    return inFight;
-                }
-                
-                public void warriorAttacked(Warrior attacked, Warrior attacker, int damage) {
-                    
-                }
+						@Override
+						public void windowIconified(WindowEvent arg0) {
+						}
+
+						@Override
+						public void windowOpened(WindowEvent arg0) {
+						}
+
+					});
+				}
+
+				public void tickLapsed(long tick) {
+
+				}
+
+				public void turnLapsed(long tick, int turnNumber, Warrior warrior) {
+					frame.repaint();
+				}
+
+				public boolean continueFighting() {
+					return inFight;
+				}
+
+				public void warriorAttacked(Warrior attacked, Warrior attacker, int damage) {
+
+				}
 
 				@Override
 				public void warriorMoved(Warrior warrior, FieldCell from, FieldCell to) {
-					
+
 				}
-            });
 
-            startFight.setEnabled(false);
+				@Override
+				public void figthFinished(WarriorManager winner) {
+					inFight = false;
+					System.out.println("The winner is " + winner.getName());
+				}
+			});
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
+			startFight.setEnabled(false);
 
-                    BattleField.getInstance().fight();
-                    BattleField.getInstance().showResult();
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
 
-                    startFight.setEnabled(true);
-                }
-            }).start();
+					BattleField.getInstance().fight();
+					BattleField.getInstance().showResult();
 
-        } catch (ClassNotFoundException e) {
+					startFight.setEnabled(true);
+				}
+			}).start();
 
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
+		} catch (ClassNotFoundException e) {
 
-    private void saveJarSelection() {
-    	
-    	URL urlJar1 = finderWarriorManager1.getSelectedJarFile();
-    	URL urlJar2 = finderWarriorManager2.getSelectedJarFile();
-    	
-    	String className1 = finderWarriorManager1.getSelectedClassName();
-    	String className2 = finderWarriorManager2.getSelectedClassName();
-    	
-    	try {
-    		
-    		FileWriter fw = new FileWriter("Battlefield jar files.txt");
-    		fw.write(urlJar1.toString() + "\n");
-    		fw.write(className1.toString() + "\n");
-    		fw.write(urlJar2.toString() + "\n");
-    		fw.write(className2.toString() + "\n");
-    		fw.close();
-    		
-    	} catch (Exception ex) {
-    		System.err.println("Error grabando: " + ex);
-    	}
-    }
-    
-    private void loadJarSelection() {
-    	
-    	try {
-    		
-    		File f = new File("Battlefield jar files.txt");
-    		
-    		if (f.exists()) {
-    			BufferedReader br = new BufferedReader(new FileReader( f));
-    			
-    			String url1 = br.readLine();
-    			String class1 = br.readLine();
-    			String url2 = br.readLine();
-    			String class2 = br.readLine();
-    			
-    			br.close();
-    			
-    			finderWarriorManager1.getSelectedJarFile(url1);
-    			finderWarriorManager2.getSelectedJarFile(url2);
-    	    	
-    	    	finderWarriorManager1.getSelectedClassName(class1);
-    	    	finderWarriorManager2.getSelectedClassName(class2);
-    		}
-    		
-    	} catch (Exception ex) {
-    		System.err.println("Error leyendo: " + ex);
-    	}
-    }
-    
-    public static void main(String[] args) {
-        SwingConsole.run(new BattleFieldSetup(), 600, 400, true, "IA");
-    }
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private void saveJarSelection() {
+
+		URL urlJar1 = finderWarriorManager1.getSelectedJarFile();
+		URL urlJar2 = finderWarriorManager2.getSelectedJarFile();
+
+		String className1 = finderWarriorManager1.getSelectedClassName();
+		String className2 = finderWarriorManager2.getSelectedClassName();
+
+		try {
+
+			FileWriter fw = new FileWriter("Battlefield jar files.txt");
+			fw.write(urlJar1.toString() + "\n");
+			fw.write(className1.toString() + "\n");
+			fw.write(urlJar2.toString() + "\n");
+			fw.write(className2.toString() + "\n");
+			fw.close();
+
+		} catch (Exception ex) {
+			System.err.println("Error grabando: " + ex);
+		}
+	}
+
+	private void loadJarSelection() {
+
+		try {
+
+			File f = new File("Battlefield jar files.txt");
+
+			if (f.exists()) {
+				BufferedReader br = new BufferedReader(new FileReader(f));
+
+				String url1 = br.readLine();
+				String class1 = br.readLine();
+				String url2 = br.readLine();
+				String class2 = br.readLine();
+
+				br.close();
+
+				finderWarriorManager1.getSelectedJarFile(url1);
+				finderWarriorManager2.getSelectedJarFile(url2);
+
+				finderWarriorManager1.getSelectedClassName(class1);
+				finderWarriorManager2.getSelectedClassName(class2);
+			}
+
+		} catch (Exception ex) {
+			System.err.println("Error leyendo: " + ex);
+		}
+	}
+
+	public static void main(String[] args) {
+		SwingConsole.run(new BattleFieldSetup(), 600, 400, true, "IA");
+	}
 }

@@ -20,6 +20,8 @@ public interface BattleFieldListener {
     
     public void startFight();
     
+    public void figthFinished(WarriorManager winner);
+    
     public void tickLapsed(long tick);
     
     public void turnLapsed(long tick, int turnNumber, Warrior warrior);

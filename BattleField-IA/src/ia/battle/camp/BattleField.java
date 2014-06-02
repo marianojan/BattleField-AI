@@ -291,6 +291,14 @@ public class BattleField {
 			inFight &= (wm1.getCount() <= warriorPerBattle && wm2.getCount() <= warriorPerBattle);
 			
 		} while (inFight);
+		
+		for (BattleFieldListener listener : listeners) {
+			if (wm1.getCount() < wm2.getCount())
+				listener.figthFinished(wm1);
+			else
+				listener.figthFinished(wm2);
+		}
+		
 	}
 
 	private void executeSkipAction() {
