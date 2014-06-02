@@ -187,6 +187,7 @@ public class BattleFieldSetup extends JFrame {
 				public void figthFinished(WarriorManager winner) {
 					inFight = false;
 					System.out.println("The winner is " + winner.getName());
+					JOptionPane.showMessageDialog(null, "The winner is " + winner.getName());
 				}
 			});
 
