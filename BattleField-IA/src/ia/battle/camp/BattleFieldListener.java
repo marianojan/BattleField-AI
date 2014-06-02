@@ -28,5 +28,6 @@ public interface BattleFieldListener {
     
     public void warriorAttacked(Warrior attacked, Warrior attacker, int damage);
     
+    public void warriorMoved(Warrior warrior, FieldCell from, FieldCell to);
     
 }

@@ -18,6 +18,7 @@ package ia.battle.gui;
 
 import ia.battle.camp.BattleField;
 import ia.battle.camp.BattleFieldListener;
+import ia.battle.camp.FieldCell;
 import ia.battle.camp.WarriorLoader;
 import ia.battle.camp.WarriorManager;
 import ia.battle.camp.Warrior;
@@ -176,6 +177,11 @@ public class BattleFieldSetup extends JFrame {
                 public void warriorAttacked(Warrior attacked, Warrior attacker, int damage) {
                     
                 }
+
+				@Override
+				public void warriorMoved(Warrior warrior, FieldCell from, FieldCell to) {
+					
+				}
             });
 
             startFight.setEnabled(false);

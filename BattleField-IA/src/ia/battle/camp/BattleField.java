@@ -404,17 +404,20 @@ public class BattleField {
 				}
 			}
 
-			FieldCell nueva_pos = fieldCell;
+			FieldCell newPosition = fieldCell;
 
 			try {
-				if (nueva_pos.getX() >= 0
-						&& nueva_pos.getX() < ConfigurationManager.getInstance().getMapWidth()
-						&& nueva_pos.getY() >= 0
-						&& nueva_pos.getY() < ConfigurationManager.getInstance().getMapHeight()
-						&& (getFieldCell(nueva_pos.getX(), nueva_pos.getY())).getFieldCellType() == FieldCellType.NORMAL) {
+				if (newPosition.getX() >= 0
+						&& newPosition.getX() < ConfigurationManager.getInstance().getMapWidth()
+						&& newPosition.getY() >= 0
+						&& newPosition.getY() < ConfigurationManager.getInstance().getMapHeight()
+						&& (getFieldCell(newPosition.getX(), newPosition.getY())).getFieldCellType() == FieldCellType.NORMAL) {
 					try {
 
-						currentWarriorWrapper.getWarrior().setPosition(nueva_pos);
+						for(BattleFieldListener listener : listeners)
+							listener.warriorMoved(currentWarriorWrapper.getWarrior(), currentWarriorWrapper.getWarrior().getPosition(), newPosition);
+						
+						currentWarriorWrapper.getWarrior().setPosition(newPosition);
 
 					} catch (RuleException e) {
 						e.printStackTrace();
