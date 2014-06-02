@@ -108,7 +108,6 @@ public class ClassFinder extends JPanel {
 			ArrayList<String> classes = (new WarriorLoader()).getAllClasses(url.getText(), WarriorManager.class.getName());
 			for(String warriorManagerClassName : classes)
 				comboBox.addItem(warriorManagerClassName);	
-			
 
 		} catch (Exception e) {
 

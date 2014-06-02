@@ -52,7 +52,7 @@ public class BattleField {
 		listeners = new ArrayList<BattleFieldListener>();
 		configurationManager = ConfigurationManager.getInstance();
 
-		initCells();
+		
 	}
 
 	public static BattleField getInstance() {
@@ -220,6 +220,8 @@ public class BattleField {
 		int actionPerTurns = ConfigurationManager.getInstance().getActionsPerTurn();
 		int warriorPerBattle = ConfigurationManager.getInstance().getMaxWarriorPerBattle();
 
+		initCells();
+		
 		warriors = new HashMap<Warrior, WarriorWrapper>();
 
 		warriorWrapper1 = requestNextWarrior(wm1);
@@ -290,7 +292,7 @@ public class BattleField {
 				inFight &= listener.continueFighting();
 
 			inFight &= (wm1.getCount() <= warriorPerBattle && wm2.getCount() <= warriorPerBattle);
-
+			
 		} while (inFight);
 	}
 
