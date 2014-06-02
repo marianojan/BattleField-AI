@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2013, Ing. Gabriel Barrera <gmbarrera@gmail.com>
+ * Copyright (c) 2012-2014, Ing. Gabriel Barrera <gmbarrera@gmail.com>
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above 
@@ -22,10 +22,11 @@ public interface BattleFieldListener {
     
     public void tickLapsed(long tick);
     
-    public void turnLapsed(long tick, int turnNumber);
+    public void turnLapsed(long tick, int turnNumber, Warrior warrior);
     
     public boolean continueFighting();
     
-    public void warriorAttacked();
+    public void warriorAttacked(Warrior attacked, Warrior attacker, int damage);
+    
     
 }

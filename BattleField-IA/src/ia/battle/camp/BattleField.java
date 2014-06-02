@@ -48,11 +48,8 @@ public class BattleField {
 	private Random random = new Random();
 
 	private BattleField() {
-
 		listeners = new ArrayList<BattleFieldListener>();
 		configurationManager = ConfigurationManager.getInstance();
-
-		
 	}
 
 	public static BattleField getInstance() {
@@ -267,7 +264,7 @@ public class BattleField {
 					}
 
 					for (BattleFieldListener listener : listeners)
-						listener.turnLapsed(tick, i);
+						listener.turnLapsed(tick, i, currentWarriorWrapper.getWarrior());
 
 					try {
 						Thread.sleep(50);
@@ -325,6 +322,9 @@ public class BattleField {
 
 		if (damage > 0) {
 			warriors.get(attackedWarrior).reduceHealth((int) damage);
+			
+			for(BattleFieldListener listener : listeners)
+				listener.warriorAttacked(attackedWarrior, currentWarriorWrapper.getWarrior(), (int)damage);
 		}
 	}
 

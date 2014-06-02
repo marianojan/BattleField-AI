@@ -20,6 +20,7 @@ import ia.battle.camp.BattleField;
 import ia.battle.camp.BattleFieldListener;
 import ia.battle.camp.WarriorLoader;
 import ia.battle.camp.WarriorManager;
+import ia.battle.camp.Warrior;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -164,7 +165,7 @@ public class BattleFieldSetup extends JFrame {
 
                 }
 
-                public void turnLapsed(long tick, int turnNumber) {
+                public void turnLapsed(long tick, int turnNumber, Warrior warrior) {
                     frame.repaint();
                 }
 
@@ -172,7 +173,7 @@ public class BattleFieldSetup extends JFrame {
                     return inFight;
                 }
                 
-                public void warriorAttacked() {
+                public void warriorAttacked(Warrior attacked, Warrior attacker, int damage) {
                     
                 }
             });
