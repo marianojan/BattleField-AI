@@ -23,3 +23,8 @@
 12	Speed, las celdas tienen un costo variable dependiendo del tipo que sea.
 	
 13	Comunicacion entre warrior y el warriormanager: si
+
+
+
+TODO
+Ajustar el rango de ataque a un porcentaje relacion con el tamaño del mapa.

@@ -329,7 +329,10 @@ public class BattleField {
 		damage -= defense;
 
 		if (damage > 0) {
+			
 			warriors.get(attackedWarrior).reduceHealth((int) damage);
+			
+			attackedWarrior.wasAttacked((int) damage, attack.getCellToAttack());
 			
 			for(BattleFieldListener listener : listeners)
 				listener.warriorAttacked(attackedWarrior, currentWarriorWrapper.getWarrior(), (int)damage);

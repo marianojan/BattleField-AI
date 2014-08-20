@@ -45,7 +45,7 @@ public final class ConfigurationManager {
 	}
 	
 	public int getMaxWarriorPerBattle() {
-		return 3;
+		return 15;
 	}
 	
 	

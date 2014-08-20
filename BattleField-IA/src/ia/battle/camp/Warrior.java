@@ -127,6 +127,10 @@ public abstract class Warrior {
 
 	public abstract Action playTurn(long tick, int actionNumber);
 
+	public void wasAttacked(int damage, FieldCell source){
+		
+	}
+	
     public boolean useSpecialItem() {      
         return true;
     }
