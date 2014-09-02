@@ -20,12 +20,14 @@ public class FieldCell {
 	private int x, y;
 	private FieldCellType fieldCellType;
 	private SpecialItem specialItem;
-
-	FieldCell(FieldCellType type, int x, int y, SpecialItem specialItem) {
+	private float cost;
+	
+	FieldCell(FieldCellType type, int x, int y, SpecialItem specialItem, float cost) {
 		this.fieldCellType = type;
 		this.x = x;
 		this.y = y;
 		this.specialItem = specialItem;
+		this.cost = cost;
 	}
 
 	public FieldCellType getFieldCellType() {
@@ -38,6 +40,10 @@ public class FieldCell {
 	
 	public boolean hasSpecialItem() {
 		return specialItem != null;
+	}
+	
+	public float getCost() {
+		return cost;
 	}
 	
 	public int getX(){

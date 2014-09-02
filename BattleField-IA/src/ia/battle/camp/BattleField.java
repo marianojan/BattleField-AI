@@ -74,9 +74,9 @@ public class BattleField {
 					si = null;
 
 				if (Math.abs(random.nextGaussian()) > 2.1)
-					cells[i][j] = new FieldCell(FieldCellType.BLOCKED, i, j, null);
+					cells[i][j] = new FieldCell(FieldCellType.BLOCKED, i, j, null, Float.POSITIVE_INFINITY);
 				else
-					cells[i][j] = new FieldCell(FieldCellType.NORMAL, i, j, si);
+					cells[i][j] = new FieldCell(FieldCellType.NORMAL, i, j, si, 1f);
 
 			}
 	}
@@ -390,8 +390,11 @@ public class BattleField {
 		FieldCell previousCell = currentWarriorWrapper.getWarrior().getPosition();
 
 		for (FieldCell fieldCell : currentWarriorActionsMoveCells) {
-
-			currentWarriorWrapper.doStep();
+			
+			if (fieldCell.getX() == previousCell.getX() || fieldCell.getY() == previousCell.getY())
+				currentWarriorWrapper.doStep();
+			else
+				currentWarriorWrapper.doStep(1.41f);
 
 			if (currentWarriorWrapper.getSteps() > currentWarriorWrapper.getWarrior().getSpeed() / 5)
 				return;

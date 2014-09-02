@@ -18,7 +18,7 @@ package ia.battle.camp;
 
 class WarriorWrapper {
 	private Warrior warrior;
-	private int stepsInTurn;
+	private float stepsInTurn;
 
 	WarriorWrapper(Warrior warrior) {
 		this.warrior = warrior;
@@ -36,17 +36,21 @@ class WarriorWrapper {
 		stepsInTurn++;
 	}
 
-	public int getSteps() {
+	void doStep(float step) {
+		stepsInTurn += step;
+	}
+
+	public float getSteps() {
 		return stepsInTurn;
 	}
 
-    void reduceHealth(int damage) {
+	void reduceHealth(int damage) {
 
-        System.out.println("    " + warrior.hashCode()  + " -> " +warrior.getHealth()  + "   " + damage);
-        
-        if (warrior.getHealth() <= damage)
-            warrior.setHealth(0);
-        else
-            warrior.setHealth(warrior.getHealth() - damage);
-    }
+		System.out.println("    " + warrior.hashCode() + " -> " + warrior.getHealth() + "   " + damage);
+
+		if (warrior.getHealth() <= damage)
+			warrior.setHealth(0);
+		else
+			warrior.setHealth(warrior.getHealth() - damage);
+	}
 }
