@@ -1,4 +1,4 @@
-file:/C:/Users/Gabriel/Documents/example_ia.jar
+file:/C:/Users/Gabriel/Documents/example.jar
 ExampleManager
-file:/C:/Users/Gabriel/Documents/example_ia.jar
+file:/C:/Users/Gabriel/Documents/example.jar
 ExampleManager

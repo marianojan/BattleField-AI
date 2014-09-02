@@ -13,30 +13,52 @@ public class MazeGenerator {
 		this.x = x;
 		this.y = y;
 		maze = new int[this.x][this.y];
-		normalizedMaze = new int[this.x][this.y];
+		normalizedMaze = new int[this.x * 4 + 1][this.y * 2 + 1];
 
 		generateMaze(0, 0);
 		normalize();
 	}
 
 	private void normalize() {
+		String[] lineas = new String[this.y * 2 + 1];
+		String linea;
+		int nroLinea = 0;
+
 		for (int i = 0; i < y; i++) {
-			
-			for (int j = 0; j < x; j++) {
-				System.out.print((maze[j][i] & 1) == 0 ? "****" : "*   ");
-			}
-			System.out.println("*");
-			// draw the west edge
-			for (int j = 0; j < x; j++) {
-				System.out.print((maze[j][i] & 8) == 0 ? "*   " : "    ");
-			}
-			System.out.println("*");
+			linea = "";
+			for (int j = 0; j < x; j++)
+				linea += (maze[j][i] & 1) == 0 ? "****" : "*   ";
+			linea += "*";
+			lineas[nroLinea++] = linea;
+			linea = "";
+			for (int j = 0; j < x; j++)
+				linea += (maze[j][i] & 8) == 0 ? "*   " : "    ";
+			linea += "*";
+			lineas[nroLinea++] = linea;
 		}
-		// draw the bottom line
-		for (int j = 0; j < x; j++) {
-			System.out.print("****");
+		linea = "";
+		for (int j = 0; j < x; j++)
+			linea += "****";
+		linea += "*";
+		lineas[nroLinea++] = linea;
+
+		int j = 0;
+		for (String s : lineas) {
+			int i = 0;
+			for (char c : s.toCharArray())
+				if (c == '*')
+					normalizedMaze[i++][j] = 1;
+				else
+					normalizedMaze[i++][j] = 0;
+			j++;
 		}
-		System.out.println("*");
+
+		for (int[] h : normalizedMaze) {
+			for (int c : h)
+				System.out.print(c == 0 ? " " : "0");
+			System.out.println();
+		}
+
 	}
 
 	private void generateMaze(int cx, int cy) {
@@ -79,7 +101,19 @@ public class MazeGenerator {
 		}
 	};
 
-	public int[][] getMaze(int x, int y) {
+	public int[][] getMaze() {
 		return normalizedMaze;
+	}
+
+	public static void main(String[] arg) {
+		MazeGenerator mg = new MazeGenerator(15, 15);
+		int[][] maze = mg.getMaze();
+
+		for (int[] h : maze) {
+			for (int c : h)
+				System.out.print(c == 0 ? " " : "0");
+			System.out.println();
+		}
+
 	}
 }

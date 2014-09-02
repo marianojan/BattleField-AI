@@ -29,11 +29,11 @@ public final class ConfigurationManager {
 	}
 	
 	public int getMapHeight() {
-		return 40;
+		return 40 + 1;	//Multiplo de 2 mas 1
 	}
 	
 	public int getMapWidth() {
-		return 50;
+		return 60 + 1;		//Multiplo de 4 mas 1
 	}
 	
 	public int getTurnsToShrink() {
