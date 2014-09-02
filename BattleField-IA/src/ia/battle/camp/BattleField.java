@@ -64,24 +64,6 @@ public class BattleField {
 		cells = new FieldCell[width][height];
 
 		SpecialItemFactory sif = new SpecialItemFactory();
-		SpecialItem si;
-
-		for (int i = 0; i < width; i++)
-			for (int j = 0; j < height; j++) {
-
-				if (Math.abs(random.nextGaussian()) > 2.5)
-					si = sif.getSpecialItem();
-				else
-					si = null;
-
-				if (Math.abs(random.nextGaussian()) > 2.1)
-					cells[i][j] = new FieldCell(FieldCellType.BLOCKED, i, j,
-							null, Float.POSITIVE_INFINITY);
-				else
-					cells[i][j] = new FieldCell(FieldCellType.NORMAL, i, j, si,
-							1f);
-
-			}
 
 		MazeGenerator mg = new MazeGenerator((width - 1) / 4, (height - 1) / 2);
 		int[][] maze = mg.getMaze();
@@ -89,19 +71,14 @@ public class BattleField {
 		for (int i = 0; i < width; i++)
 			for (int j = 0; j < height; j++) {
 
-				if (Math.abs(random.nextGaussian()) > 2.5)
-					si = sif.getSpecialItem();
-				else
-					si = null;
-
 				if (maze[i][j] == 1)
 					cells[i][j] = new FieldCell(FieldCellType.BLOCKED, i, j,
 							null, Float.POSITIVE_INFINITY);
 				else
-					cells[i][j] = new FieldCell(FieldCellType.NORMAL, i, j, si,
-							1f);
+					cells[i][j] = new FieldCell(FieldCellType.NORMAL, i, j,
+							Math.abs(random.nextGaussian()) > 2.5 ? sif
+									.getSpecialItem() : null, 1f);
 			}
-
 	}
 
 	public FieldCell getFieldCell(int x, int y) throws OutOfMapException {
