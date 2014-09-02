@@ -21,7 +21,7 @@ public class MazeGenerator {
 
 	private void normalize() {
 		for (int i = 0; i < y; i++) {
-			// draw the north edge
+			
 			for (int j = 0; j < x; j++) {
 				System.out.print((maze[j][i] & 1) == 0 ? "****" : "*   ");
 			}
