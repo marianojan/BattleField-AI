@@ -21,7 +21,7 @@ public class FieldCell {
 	private FieldCellType fieldCellType;
 	private SpecialItem specialItem;
 	private float cost;
-	
+
 	FieldCell(FieldCellType type, int x, int y, SpecialItem specialItem, float cost) {
 		this.fieldCellType = type;
 		this.x = x;
@@ -37,31 +37,31 @@ public class FieldCell {
 	SpecialItem getSpecialItem() {
 		return specialItem;
 	}
-	
+
 	public boolean hasSpecialItem() {
 		return specialItem != null;
 	}
-	
+
 	public float getCost() {
 		return cost;
 	}
-	
-	public int getX(){
+
+	public int getX() {
 		return x;
 	}
-	
-	public int getY(){
+
+	public int getY() {
 		return y;
 	}
-	
+
 	public String toString() {
-	    String aux = " ";
-	    
+		String aux = " ";
+
 		switch (fieldCellType) {
 		case NORMAL:
 			aux = "N";
 			break;
-			
+
 		case BLOCKED:
 			aux = "B";
 			break;
@@ -70,25 +70,24 @@ public class FieldCell {
 		return aux + " [" + x + ", " + y + "]";
 	}
 
-    SpecialItem removeSpecialItem() {
-        SpecialItem si = specialItem;
-        specialItem = null;
-        
-        return si;
-    }
-    
-//    public boolean equals(Object other) {
-//    	if (other == null)
-//    		return false;
-//    	
-//    	if (!(other instanceof FieldCell)
-//    			)
-//    		return false;
-//    	
-//    	if (((FieldCell)other).x != this.x || ((FieldCell)other).y != this.y)
-//    		return false;
-//    	
-//    	return true;
-//    }
+	SpecialItem removeSpecialItem() {
+		SpecialItem si = specialItem;
+		specialItem = null;
+
+		return si;
+	}
+
+	public boolean equals(Object other) {
+		if (other == null)
+			return false;
+
+		if (!(other instanceof FieldCell))
+			return false;
+
+		if (((FieldCell) other).x != this.x || ((FieldCell) other).y != this.y)
+			return false;
+
+		return true;
+	}
 
 }

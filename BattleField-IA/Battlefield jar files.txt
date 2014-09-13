@@ -1,4 +1,4 @@
-file:/C:/Users/Gabriel/Documents/example.jar
-ExampleManager
-file:/C:/Users/Gabriel/Documents/example.jar
-ExampleManager
+file:/C:/Users/Gabriel/Documents/matador.jar
+edu.ucema.ia.common.Director
+file:/C:/Users/Gabriel/Documents/matador.jar
+edu.ucema.ia.common.Director
