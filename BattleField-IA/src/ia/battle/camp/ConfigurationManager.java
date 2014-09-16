@@ -48,5 +48,12 @@ public final class ConfigurationManager {
 		return 15;
 	}
 	
-	
+	/**
+	 * Returns the max range available for a warrior (radius)
+	 * @return
+	 */
+	public int getMaxRangeForWarrior() {
+		int maxRange = Math.min(ConfigurationManager.getInstance().getMapHeight(), ConfigurationManager.getInstance().getMapHeight());
+		return maxRange / 4;
+	}
 }

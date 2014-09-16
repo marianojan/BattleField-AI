@@ -23,45 +23,45 @@ public abstract class Warrior {
 	private String name;
 	private int health, defense, strength, speed, range;
 	private int initialHealth, initialDefense, initialStrength, initialSpeed, initialRange;
-	
+
 	public final int getInitialHealth() {
-        return initialHealth;
-    }
+		return initialHealth;
+	}
 
 	public final int getInitialDefense() {
-        return initialDefense;
-    }
+		return initialDefense;
+	}
 
-    public final int getInitialStrength() {
-        return initialStrength;
-    }
+	public final int getInitialStrength() {
+		return initialStrength;
+	}
 
-    public final int getInitialSpeed() {
-        return initialSpeed;
-    }
+	public final int getInitialSpeed() {
+		return initialSpeed;
+	}
 
-    public final int getInitialRange() {
-        return initialRange;
-    }
+	public final int getInitialRange() {
+		return initialRange;
+	}
 
-    private FieldCell position;
+	private FieldCell position;
 
 	public Warrior(String name, int health, int defense, int strength, int speed, int range) throws RuleException {
 
 		this.name = name;
-		
+
 		this.health = health;
 		this.defense = defense;
 		this.strength = strength;
 		this.speed = speed;
 		this.range = range;
-		
+
 		this.initialHealth = health;
-        this.initialDefense = defense;
-        this.initialStrength = strength;
-        this.initialSpeed = speed;
-        this.initialRange = range;		
-		
+		this.initialDefense = defense;
+		this.initialStrength = strength;
+		this.initialSpeed = speed;
+		this.initialRange = range;
+
 		int sum = this.health + this.defense + this.strength + this.speed + this.range;
 
 		if (sum > ConfigurationManager.getInstance().getMaxPointsPerWarrior())
@@ -70,29 +70,34 @@ public abstract class Warrior {
 		if (health <= 0 || defense <= 0 || strength <= 0 || speed <= 0 || range <= 0)
 			throw new RuleException();
 
+		int maxRange = Math.min(ConfigurationManager.getInstance().getMapHeight(), ConfigurationManager.getInstance().getMapHeight());
+		maxRange /= 4; 
+		if (range > maxRange)
+			this.range = maxRange;
+
 	}
 
 	final void setHealth(int health) {
-        this.health = health;
-    }
+		this.health = health;
+	}
 
-    final void setDefense(int defense) {
-        this.defense = defense;
-    }
+	final void setDefense(int defense) {
+		this.defense = defense;
+	}
 
-    final void setStrength(int strength) {
-        this.strength = strength;
-    }
+	final void setStrength(int strength) {
+		this.strength = strength;
+	}
 
-    final void setSpeed(int speed) {
-        this.speed = speed;
-    }
+	final void setSpeed(int speed) {
+		this.speed = speed;
+	}
 
-    final void setRange(int range) {
-        this.range = range;
-    }
+	final void setRange(int range) {
+		this.range = range;
+	}
 
-    public String getName() {
+	public String getName() {
 
 		return name;
 	}
@@ -128,15 +133,15 @@ public abstract class Warrior {
 	public abstract Action playTurn(long tick, int actionNumber);
 
 	public abstract void wasAttacked(int damage, FieldCell source);
-	
-	public abstract void enemyKilled();
-	
-    public boolean useSpecialItem() {      
-        return true;
-    }
 
-    void setName(String name) {
-        this.name = name;
-    }
+	public abstract void enemyKilled();
+
+	public boolean useSpecialItem() {
+		return true;
+	}
+
+	void setName(String name) {
+		this.name = name;
+	}
 
 }
