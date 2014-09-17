@@ -143,5 +143,4 @@ public abstract class Warrior {
 	void setName(String name) {
 		this.name = name;
 	}
-
 }
