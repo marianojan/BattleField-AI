@@ -48,6 +48,7 @@ public class BattleFieldSetup extends JFrame {
      * 
      */
 	private static final long serialVersionUID = 693518024717393345L;
+	private static final String SETTINGS_FILE = "Battlefield jar files.txt";
 	private JLabel title;
 	private JButton startFight;
 	private ClassFinder finderWarriorManager1, finderWarriorManager2;
@@ -136,8 +137,8 @@ public class BattleFieldSetup extends JFrame {
 						@Override
 						public void windowClosing(WindowEvent arg0) {
 
-							if (JOptionPane.showConfirmDialog(frame, "Est· seguro de finalizar la batalla?",
-									"Confirme AcciÛn", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
+							if (JOptionPane.showConfirmDialog(frame, "Est√° seguro de finalizar la batalla?",
+									"Confirme Acci√≥n", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
 								inFight = false;
 								frame.dispose();
 							}
@@ -228,7 +229,7 @@ public class BattleFieldSetup extends JFrame {
 
 		try {
 
-			FileWriter fw = new FileWriter("Battlefield jar files.txt");
+			FileWriter fw = new FileWriter(SETTINGS_FILE);
 			fw.write(urlJar1.toString() + "\n");
 			fw.write(className1.toString() + "\n");
 			fw.write(urlJar2.toString() + "\n");
@@ -244,7 +245,7 @@ public class BattleFieldSetup extends JFrame {
 
 		try {
 
-			File f = new File("Battlefield jar files.txt");
+			File f = new File(SETTINGS_FILE);
 
 			if (f.exists()) {
 				BufferedReader br = new BufferedReader(new FileReader(f));
