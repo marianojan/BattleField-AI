@@ -22,9 +22,13 @@ import ia.battle.camp.WarriorManager;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -34,6 +38,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class ClassFinder extends JPanel {
@@ -42,12 +48,13 @@ public class ClassFinder extends JPanel {
      * 
      */
     private static final long serialVersionUID = 7859582262519030245L;
+    private List<ClassFinderObserver> observers;
     private JFileChooser chooser = new JFileChooser();
 	private JTextField url;
 	private JComboBox<String> comboBox;
 
 	public ClassFinder(String title) {
-
+		observers = new ArrayList<>();
 		FileNameExtensionFilter filter = new FileNameExtensionFilter(".jar", "jar");
 		chooser.setFileFilter(filter);
 
@@ -61,6 +68,28 @@ public class ClassFinder extends JPanel {
 		panel2.setLayout(new FlowLayout());
 
 		url = new JTextField(40);
+		url.getDocument().addDocumentListener(new DocumentListener() {
+			
+			private void notifyObservers() {
+				for (ClassFinderObserver observer: observers)
+					observer.fileSelectionChange(url.getText());;
+			}
+			
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				notifyObservers();
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				notifyObservers();
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				notifyObservers();
+			}
+		});
 		panel2.add(url);
 
 		JButton chooseUrl = new JButton("...");
@@ -70,8 +99,11 @@ public class ClassFinder extends JPanel {
 			public void actionPerformed(ActionEvent arg0) {
 
 				if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-					url.setText(chooser.getSelectedFile().getAbsolutePath());
+					String filename = chooser.getSelectedFile().getAbsolutePath();
+					url.setText(filename);
 					fillComboBox();
+					for (ClassFinderObserver observer: observers)
+						observer.fileSelectionChange(filename);
 				}
 
 			}
@@ -80,8 +112,16 @@ public class ClassFinder extends JPanel {
 
 		panel.add(panel2);
 
-		comboBox = new JComboBox<>();
+		comboBox = new JComboBox<String>();
 		panel.add(comboBox);
+		comboBox.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				for (ClassFinderObserver observer: observers)
+					// Why is this an Object instead of String, if JComboBox is generic?
+					observer.classSelectionChange((String) comboBox.getSelectedItem());
+			}
+		});
 
 		this.add(panel);
 	}
@@ -94,33 +134,56 @@ public class ClassFinder extends JPanel {
 		}
 		return null;
 	}
+	
+	/**
+	 * Returns true if the selected jar file exists and is a regular file.
+	 */
+	public Boolean selectedJarExists() {
+		File file = new File (url.getText());
+		return file.exists() && file.isFile();
+	}
+	
+	/**
+	 * Returns true if a valid class has been selected.
+	 */
+	public Boolean hasSelectedClass() {
+		return comboBox.getSelectedIndex() != -1;
+	}
 
 	public String getSelectedClassName() {
 		return comboBox.getSelectedItem().toString();
 	}
 	
 	public void fillComboBox() {
-
 		comboBox.removeAllItems();
 
-		try {
-			
-			ArrayList<String> classes = (new WarriorLoader()).getAllClasses(url.getText(), WarriorManager.class.getName());
-			for(String warriorManagerClassName : classes)
-				comboBox.addItem(warriorManagerClassName);	
-
-		} catch (Exception e) {
-
-			e.printStackTrace();
-		}
+		if (selectedJarExists())
+			try {
+				ArrayList<String> classes = (new WarriorLoader())
+						.getAllClasses(url.getText(), WarriorManager.class.getName());
+				for(String warriorManagerClassName : classes)
+					comboBox.addItem(warriorManagerClassName);	
+	
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 	}
 
-	public void getSelectedJarFile(String url1) {
-		url.setText(url1.substring(6));
+	public void getSelectedJarFile(String newUrl) {
+		url.setText(newUrl.substring(6));
 		fillComboBox();
 	}
 
 	public void getSelectedClassName(String class1) {
 		comboBox.setSelectedItem(class1);
+	}
+	
+	public interface ClassFinderObserver {
+		public void fileSelectionChange(String filename);
+		public void classSelectionChange(String classname);
+	}
+	
+	public void addSelectionChangeObserver(ClassFinderObserver observer) {
+		observers.add(observer);
 	}
 }

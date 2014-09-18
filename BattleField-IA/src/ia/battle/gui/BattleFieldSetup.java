@@ -19,9 +19,10 @@ package ia.battle.gui;
 import ia.battle.camp.BattleField;
 import ia.battle.camp.BattleFieldListener;
 import ia.battle.camp.FieldCell;
+import ia.battle.camp.Warrior;
 import ia.battle.camp.WarriorLoader;
 import ia.battle.camp.WarriorManager;
-import ia.battle.camp.Warrior;
+import ia.battle.gui.components.FightButton;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -36,7 +37,6 @@ import java.net.URL;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -50,7 +50,7 @@ public class BattleFieldSetup extends JFrame {
 	private static final long serialVersionUID = 693518024717393345L;
 	private static final String SETTINGS_FILE = "Battlefield jar files.txt";
 	private JLabel title;
-	private JButton startFight;
+	private FightButton startFight;
 	private ClassFinder finderWarriorManager1, finderWarriorManager2;
 
 	private Frame frame;
@@ -75,20 +75,22 @@ public class BattleFieldSetup extends JFrame {
 
 		this.add(panel);
 
-		startFight = new JButton("Fight!");
+		loadJarSelection();
+		
+		startFight = new FightButton(finderWarriorManager1, finderWarriorManager2);
 		startFight.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent event) {
 				figthClicked();
 			}
 		});
+		startFight.updateEnabledStatus();
 
-		loadJarSelection();
 
 		this.add(startFight, BorderLayout.SOUTH);
 	}
 
-	private void figthClicked() {
+	protected void figthClicked() {
 
 		saveJarSelection();
 
