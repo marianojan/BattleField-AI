@@ -19,9 +19,10 @@ package ia.battle.gui;
 import ia.battle.camp.BattleField;
 import ia.battle.camp.BattleFieldListener;
 import ia.battle.camp.FieldCell;
+import ia.battle.camp.Warrior;
 import ia.battle.camp.WarriorLoader;
 import ia.battle.camp.WarriorManager;
-import ia.battle.camp.Warrior;
+import ia.battle.gui.components.FightButton;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -36,7 +37,6 @@ import java.net.URL;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -48,8 +48,9 @@ public class BattleFieldSetup extends JFrame {
      * 
      */
 	private static final long serialVersionUID = 693518024717393345L;
+	private static final String SETTINGS_FILE = "Battlefield jar files.txt";
 	private JLabel title;
-	private JButton startFight;
+	private FightButton startFight;
 	private ClassFinder finderWarriorManager1, finderWarriorManager2;
 
 	private Frame frame;
@@ -74,20 +75,22 @@ public class BattleFieldSetup extends JFrame {
 
 		this.add(panel);
 
-		startFight = new JButton("Fight!");
+		loadJarSelection();
+		
+		startFight = new FightButton(finderWarriorManager1, finderWarriorManager2);
 		startFight.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent event) {
 				figthClicked();
 			}
 		});
+		startFight.updateEnabledStatus();
 
-		loadJarSelection();
 
 		this.add(startFight, BorderLayout.SOUTH);
 	}
 
-	private void figthClicked() {
+	protected void figthClicked() {
 
 		saveJarSelection();
 
@@ -136,8 +139,8 @@ public class BattleFieldSetup extends JFrame {
 						@Override
 						public void windowClosing(WindowEvent arg0) {
 
-							if (JOptionPane.showConfirmDialog(frame, "Est· seguro de finalizar la batalla?",
-									"Confirme AcciÛn", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
+							if (JOptionPane.showConfirmDialog(frame, "Est√° seguro de finalizar la batalla?",
+									"Confirme Acci√≥n", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
 								inFight = false;
 								frame.dispose();
 							}
@@ -228,7 +231,7 @@ public class BattleFieldSetup extends JFrame {
 
 		try {
 
-			FileWriter fw = new FileWriter("Battlefield jar files.txt");
+			FileWriter fw = new FileWriter(SETTINGS_FILE);
 			fw.write(urlJar1.toString() + "\n");
 			fw.write(className1.toString() + "\n");
 			fw.write(urlJar2.toString() + "\n");
@@ -244,7 +247,7 @@ public class BattleFieldSetup extends JFrame {
 
 		try {
 
-			File f = new File("Battlefield jar files.txt");
+			File f = new File(SETTINGS_FILE);
 
 			if (f.exists()) {
 				BufferedReader br = new BufferedReader(new FileReader(f));
