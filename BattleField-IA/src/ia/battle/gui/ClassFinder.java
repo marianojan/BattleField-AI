@@ -68,28 +68,7 @@ public class ClassFinder extends JPanel {
 		panel2.setLayout(new FlowLayout());
 
 		url = new JTextField(40);
-		url.getDocument().addDocumentListener(new DocumentListener() {
-			
-			private void notifyObservers() {
-				for (ClassFinderObserver observer: observers)
-					observer.fileSelectionChange(url.getText());;
-			}
-			
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				notifyObservers();
-			}
-			
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				notifyObservers();
-			}
-			
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				notifyObservers();
-			}
-		});
+		url.setEditable(false);
 		panel2.add(url);
 
 		JButton chooseUrl = new JButton("...");
