@@ -52,13 +52,6 @@ public class MazeGenerator {
 					normalizedMaze[i++][j] = 0;
 			j++;
 		}
-//
-//		for (int[] h : normalizedMaze) {
-//			for (int c : h)
-//				System.out.print(c == 0 ? " " : "0");
-//			System.out.println();
-//		}
-
 	}
 
 	private void generateMaze(int cx, int cy) {
@@ -103,17 +96,5 @@ public class MazeGenerator {
 
 	public int[][] getMaze() {
 		return normalizedMaze;
-	}
-
-	public static void main(String[] arg) {
-		MazeGenerator mg = new MazeGenerator(15, 15);
-		int[][] maze = mg.getMaze();
-
-		for (int[] h : maze) {
-			for (int c : h)
-				System.out.print(c == 0 ? " " : "0");
-			System.out.println();
-		}
-
 	}
 }
