@@ -13,7 +13,9 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package ia.battle.camp;
+package ia.battle.camp.actions;
+
+import ia.battle.camp.FieldCell;
 
 public final class Attack extends Action {
 	private FieldCell cellToAttack;
