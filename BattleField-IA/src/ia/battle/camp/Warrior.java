@@ -16,6 +16,7 @@
 
 package ia.battle.camp;
 
+import ia.battle.camp.actions.Action;
 import ia.exceptions.RuleException;
 
 public abstract class Warrior {

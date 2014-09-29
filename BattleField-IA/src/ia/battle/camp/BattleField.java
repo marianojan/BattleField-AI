@@ -16,6 +16,11 @@
 
 package ia.battle.camp;
 
+import ia.battle.camp.actions.Action;
+import ia.battle.camp.actions.Attack;
+import ia.battle.camp.actions.Move;
+import ia.battle.camp.actions.Skip;
+import ia.battle.camp.actions.Suicide;
 import ia.exceptions.OutOfMapException;
 import ia.exceptions.RuleException;
 
