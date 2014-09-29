@@ -56,4 +56,8 @@ public final class ConfigurationManager {
 		int maxRange = Math.min(ConfigurationManager.getInstance().getMapHeight(), ConfigurationManager.getInstance().getMapHeight());
 		return maxRange / 4;
 	}
+
+	public int getFieldCellHitPoints() {
+		return 100;
+	}
 }

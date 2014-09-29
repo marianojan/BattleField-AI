@@ -29,7 +29,5 @@
 TODO
 Ajustar el rango de ataque a un porcentaje relacion con el tamaño del mapa.
 
-Costo movimiento en diagonal.  
-
 Camino de solo sentido.
 

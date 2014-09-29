@@ -186,7 +186,7 @@ public class BattleField {
 				wwrapper.getWarrior().setName("Sin Nombre " + wm.hashCode());
 
 		} catch (Exception e1) {
-			// TODO:
+			// TODO: Exception
 			e1.printStackTrace();
 		}
 
@@ -307,15 +307,20 @@ public class BattleField {
 	private void executeAttackAction(Attack attack) {
 		Warrior attackedWarrior = findWarriorInMap(attack.getCellToAttack());
 
+		float damage = currentWarriorWrapper.getWarrior().getStrength();
+		damage *= random.nextFloat();
+		
 		if (attackedWarrior == null) {
+			FieldCell attackedFieldCell = attack.getCellToAttack();
+			attackedFieldCell.receiveDamage((int)damage);
+			
 			return;
 		}
 
 		if (!isWarriorInRange(attackedWarrior))
 			return;
 
-		float damage = currentWarriorWrapper.getWarrior().getStrength();
-		damage *= random.nextFloat();
+		
 
 		float defense = attackedWarrior.getDefense();
 		defense *= (random.nextFloat() / 0.75 + 0.25);
@@ -324,7 +329,7 @@ public class BattleField {
 
 		if (damage > 0) {
 
-			warriors.get(attackedWarrior).reduceHealth((int) damage);
+			warriors.get(attackedWarrior).receiveDamage((int) damage);
 
 			attackedWarrior.wasAttacked((int) damage, attack.getCellToAttack());
 
@@ -376,6 +381,8 @@ public class BattleField {
 		return adjCells;
 	}
 
+	//TODO: Para determinar costo tomar el valor del fieldcell
+	
 	private void executeMoveAction(Move action) {
 
 		ArrayList<FieldCell> currentWarriorActionsMoveCells;

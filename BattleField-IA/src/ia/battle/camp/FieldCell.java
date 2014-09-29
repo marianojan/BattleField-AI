@@ -16,11 +16,12 @@
 
 package ia.battle.camp;
 
-public class FieldCell {
+public class FieldCell extends Attackable {
 	private int x, y;
 	private FieldCellType fieldCellType;
 	private SpecialItem specialItem;
 	private float cost;
+	private int hitPoints;
 
 	FieldCell(FieldCellType type, int x, int y, SpecialItem specialItem, float cost) {
 		this.fieldCellType = type;
@@ -28,6 +29,7 @@ public class FieldCell {
 		this.y = y;
 		this.specialItem = specialItem;
 		this.cost = cost;
+		this.hitPoints = ConfigurationManager.getInstance().getFieldCellHitPoints();
 	}
 
 	public FieldCellType getFieldCellType() {
@@ -88,6 +90,21 @@ public class FieldCell {
 			return false;
 
 		return true;
+	}
+
+	@Override
+	void receiveDamage(int damage) {
+		if (this.hitPoints <= damage) {
+			this.hitPoints  = 0;
+			this.fieldCellType = FieldCellType.NORMAL;
+		}
+		else
+			this.hitPoints -= damage;
+	}
+
+	@Override
+	public int remainingLive() {
+		return this.hitPoints;
 	}
 
 }

@@ -16,7 +16,7 @@
 
 package ia.battle.camp;
 
-class WarriorWrapper {
+class WarriorWrapper extends Attackable {
 	private Warrior warrior;
 	private float stepsInTurn;
 
@@ -44,13 +44,16 @@ class WarriorWrapper {
 		return stepsInTurn;
 	}
 
-	void reduceHealth(int damage) {
-
-		System.out.println("    " + warrior.hashCode() + " -> " + warrior.getHealth() + "   " + damage);
-
+	@Override
+	void receiveDamage(int damage) {
 		if (warrior.getHealth() <= damage)
 			warrior.setHealth(0);
 		else
 			warrior.setHealth(warrior.getHealth() - damage);
+	}
+
+	@Override
+	public int remainingLive() {
+		return warrior.getHealth();
 	}
 }
