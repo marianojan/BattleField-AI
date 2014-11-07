@@ -36,7 +36,7 @@ public class FieldBoard extends JPanel {
      */
     private static final long serialVersionUID = -1351031450255485371L;
     private static final Image grass = new ImageIcon(FieldBoard.class.getResource("grass.jpg")).getImage();
-    private static final Image rocks = new ImageIcon(FieldBoard.class.getResource("rocks.png")).getImage();
+    private static final Image rocks = new ImageIcon(FieldBoard.class.getResource("wall.png")).getImage();
     private static final Image warrior1 = new ImageIcon(FieldBoard.class.getResource("warrior1.png")).getImage();
     private static final Image warrior2 = new ImageIcon(FieldBoard.class.getResource("warrior2.png")).getImage();
     private static final Image fogOfWar = new ImageIcon(FieldBoard.class.getResource("fogOfWar.png")).getImage();

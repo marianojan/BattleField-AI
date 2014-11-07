@@ -31,6 +31,10 @@ public class WarriorData {
 		this.warriorNumber = warriorNumber;
 	}
 
+	/**
+	 * Return the enemy's position
+	 * @return
+	 */
 	public FieldCell getFieldCell() {
 		return fieldCell;
 	}

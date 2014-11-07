@@ -16,11 +16,13 @@
 
 package ia.exceptions;
 
-public class OutOfMapException extends Exception {
+import ia.battle.camp.Warrior;
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 6423973136566719549L;
+public class BattleException extends Exception {
 
+	private static final long serialVersionUID = -5517726053602708552L;
+	private Warrior warrior;
+
+	
+	
 }

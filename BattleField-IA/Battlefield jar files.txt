@@ -1,4 +1,4 @@
 file:/C:/Users/Gabriel/Documents/manualbot.jar
 ExampleManager
-file:/C:/Users/Gabriel/Documents/manualbot.jar
-ExampleManager
+file:/C:/Users/Gabriel/Documents/_ia/iaqMosconi.jar
+edu.palermo.ia.TurinManager

@@ -28,7 +28,9 @@ public abstract class WarriorManager {
 
 	public final Warrior getNewWarrior() throws RuleException {
 		count++;
-		return this.getNextWarrior();
+		Warrior warrior = this.getNextWarrior();
+		warrior.setWarriorManager(this);
+		return warrior;
 	}
 
 	public int getCount() {

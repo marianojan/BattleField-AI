@@ -58,6 +58,6 @@ public final class ConfigurationManager {
 	}
 
 	public int getFieldCellHitPoints() {
-		return 100;
+		return 40;
 	}
 }

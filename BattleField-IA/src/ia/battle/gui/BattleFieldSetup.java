@@ -23,6 +23,8 @@ import ia.battle.camp.Warrior;
 import ia.battle.camp.WarriorLoader;
 import ia.battle.camp.WarriorManager;
 import ia.battle.gui.components.FightButton;
+import ia.battle.sound.DefaultSoundPlayer;
+import ia.battle.sound.SoundPlayer;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -35,6 +37,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.net.URL;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
@@ -55,7 +60,8 @@ public class BattleFieldSetup extends JFrame {
 
 	private Frame frame;
 	private boolean inFight;
-
+	private SoundPlayer soundPlayer;
+		
 	public BattleFieldSetup() {
 
 		title = new JLabel("IA - Battle Field Agents", JLabel.CENTER);
@@ -67,17 +73,20 @@ public class BattleFieldSetup extends JFrame {
 		panel.setBorder(BorderFactory.createEtchedBorder());
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-		finderWarriorManager1 = new ClassFinder("Seleccione el .jar del Warrior Manager 1");
+		finderWarriorManager1 = new ClassFinder(
+				"Seleccione el .jar del Warrior Manager 1");
 		panel.add(finderWarriorManager1);
 
-		finderWarriorManager2 = new ClassFinder("Seleccione el .jar del Warrior Manager 2");
+		finderWarriorManager2 = new ClassFinder(
+				"Seleccione el .jar del Warrior Manager 2");
 		panel.add(finderWarriorManager2);
 
 		this.add(panel);
 
 		loadJarSelection();
-		
-		startFight = new FightButton(finderWarriorManager1, finderWarriorManager2);
+
+		startFight = new FightButton(finderWarriorManager1,
+				finderWarriorManager2);
 		startFight.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
@@ -86,7 +95,8 @@ public class BattleFieldSetup extends JFrame {
 		});
 		startFight.updateEnabledStatus();
 
-
+		soundPlayer = new DefaultSoundPlayer();
+		
 		this.add(startFight, BorderLayout.SOUTH);
 	}
 
@@ -99,12 +109,14 @@ public class BattleFieldSetup extends JFrame {
 
 		try {
 
-			wm = warriorLoader.createWarriorManager(finderWarriorManager1.getSelectedJarFile(),
+			wm = warriorLoader.createWarriorManager(
+					finderWarriorManager1.getSelectedJarFile(),
 					finderWarriorManager1.getSelectedClassName());
 
 			BattleField.getInstance().addWarriorManager(wm);
 
-			wm = warriorLoader.createWarriorManager(finderWarriorManager2.getSelectedJarFile(),
+			wm = warriorLoader.createWarriorManager(
+					finderWarriorManager2.getSelectedJarFile(),
 					finderWarriorManager2.getSelectedClassName());
 
 			BattleField.getInstance().addWarriorManager(wm);
@@ -139,8 +151,10 @@ public class BattleFieldSetup extends JFrame {
 						@Override
 						public void windowClosing(WindowEvent arg0) {
 
-							if (JOptionPane.showConfirmDialog(frame, "Está seguro de finalizar la batalla?",
-									"Confirme Acción", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
+							if (JOptionPane.showConfirmDialog(frame,
+									"Está seguro de finalizar la batalla?",
+									"Confirme Acción",
+									JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
 								inFight = false;
 								frame.dispose();
 							}
@@ -169,7 +183,8 @@ public class BattleFieldSetup extends JFrame {
 
 				}
 
-				public void turnLapsed(long tick, int turnNumber, Warrior warrior) {
+				public void turnLapsed(long tick, int turnNumber,
+						Warrior warrior) {
 					frame.repaint();
 				}
 
@@ -177,12 +192,19 @@ public class BattleFieldSetup extends JFrame {
 					return inFight;
 				}
 
-				public void warriorAttacked(Warrior attacked, Warrior attacker, int damage) {
-
+				public void warriorAttacked(Warrior attacked, Warrior attacker,
+						int damage) {
+					soundPlayer.playAttack();
 				}
 
 				@Override
-				public void warriorMoved(Warrior warrior, FieldCell from, FieldCell to) {
+				public void warriorKilled(Warrior killed) {
+					soundPlayer.playBotKilled();
+				}
+				
+				@Override
+				public void warriorMoved(Warrior warrior, FieldCell from,
+						FieldCell to) {
 
 				}
 
@@ -191,9 +213,12 @@ public class BattleFieldSetup extends JFrame {
 					inFight = false;
 					if (winner != null) {
 						System.out.println("The winner is " + winner.getName());
-						JOptionPane.showMessageDialog(null, "The winner is " + winner.getName());
+						JOptionPane.showMessageDialog(null, "The winner is "
+								+ winner.getName());
 					}
 				}
+
+				
 			});
 
 			startFight.setEnabled(false);

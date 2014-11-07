@@ -24,6 +24,7 @@ public abstract class Warrior {
 	private String name;
 	private int health, defense, strength, speed, range;
 	private int initialHealth, initialDefense, initialStrength, initialSpeed, initialRange;
+	private WarriorManager warriorManager;
 
 	public final int getInitialHealth() {
 		return initialHealth;
@@ -45,6 +46,14 @@ public abstract class Warrior {
 		return initialRange;
 	}
 
+	public final WarriorManager getWarriorManager() {
+		return this.warriorManager;
+	}
+	
+	void setWarriorManager(WarriorManager warriorManager) {
+		this.warriorManager = warriorManager;
+	}
+	
 	private FieldCell position;
 
 	public Warrior(String name, int health, int defense, int strength, int speed, int range) throws RuleException {
@@ -75,7 +84,6 @@ public abstract class Warrior {
 		maxRange /= 4; 
 		if (range > maxRange)
 			this.range = maxRange;
-
 	}
 
 	final void setHealth(int health) {

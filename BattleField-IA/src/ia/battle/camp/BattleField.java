@@ -61,7 +61,7 @@ public class BattleField {
 		return instance;
 	}
 
-	private void initCells() {
+	public void initCells() {
 		int height = configurationManager.getMapHeight();
 		int width = configurationManager.getMapWidth();
 
@@ -297,7 +297,6 @@ public class BattleField {
 			else
 				listener.figthFinished(wm2);
 		}
-
 	}
 
 	private void executeSkipAction() {
@@ -305,8 +304,48 @@ public class BattleField {
 	}
 
 	private void executeSuicideAction() {
-		// TODO: Implementar el suicidio
-
+		FieldCell center = currentWarriorWrapper.getWarrior().getPosition();
+		
+		List<FieldCell> innerAdjs = BattleField.getInstance().getAdjacentCells(center);
+		List<FieldCell> middleAdjs = new ArrayList<FieldCell>();
+		List<FieldCell> outterAdjs = new ArrayList<FieldCell>();
+		
+		for(FieldCell fc : innerAdjs)
+			middleAdjs.addAll(BattleField.getInstance().getAdjacentCells(fc));
+		
+		for(FieldCell fc : middleAdjs)
+			outterAdjs.addAll(BattleField.getInstance().getAdjacentCells(fc));
+		
+		currentWarriorWrapper.getWarrior().setHealth(0);
+		for (BattleFieldListener listener : listeners)
+			listener.warriorKilled(currentWarriorWrapper.getWarrior());
+		
+		for (FieldCell fc : innerAdjs) {
+			if (fc.getFieldCellType() == FieldCellType.BLOCKED) {
+				fc.receiveDamage(fc.remainingLive());
+			}
+			fc.removeSpecialItem();
+			
+			
+		}
+		
+		for (FieldCell fc : middleAdjs) {
+			if (fc.getFieldCellType() == FieldCellType.BLOCKED) {
+				fc.receiveDamage(fc.remainingLive());
+			}
+			fc.removeSpecialItem();
+			
+			
+		}
+		
+		for (FieldCell fc : outterAdjs) {
+			if (fc.getFieldCellType() == FieldCellType.BLOCKED) {
+				fc.receiveDamage(fc.remainingLive());
+			}
+			fc.removeSpecialItem();
+			
+			
+		}
 	}
 
 	private void executeAttackAction(Attack attack) {
@@ -325,8 +364,6 @@ public class BattleField {
 		if (!isWarriorInRange(attackedWarrior))
 			return;
 
-		
-
 		float defense = attackedWarrior.getDefense();
 		defense *= (random.nextFloat() / 0.75 + 0.25);
 
@@ -340,6 +377,10 @@ public class BattleField {
 
 			for (BattleFieldListener listener : listeners)
 				listener.warriorAttacked(attackedWarrior, currentWarriorWrapper.getWarrior(), (int) damage);
+			
+			if (attackedWarrior.getHealth() <= 0)
+				for (BattleFieldListener listener : listeners)
+					listener.warriorKilled(attackedWarrior);
 		}
 	}
 
