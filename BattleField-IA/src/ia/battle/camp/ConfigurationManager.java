@@ -53,7 +53,7 @@ public final class ConfigurationManager {
 	 * @return
 	 */
 	public int getMaxRangeForWarrior() {
-		int maxRange = Math.min(ConfigurationManager.getInstance().getMapHeight(), ConfigurationManager.getInstance().getMapHeight());
+		int maxRange = Math.min(ConfigurationManager.getInstance().getMapHeight(), ConfigurationManager.getInstance().getMapWidth());
 		return maxRange / 4;
 	}
 

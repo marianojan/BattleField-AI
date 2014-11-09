@@ -316,9 +316,15 @@ public class BattleField {
 		for(FieldCell fc : middleAdjs)
 			outterAdjs.addAll(BattleField.getInstance().getAdjacentCells(fc));
 		
+		int currentHealth  = currentWarriorWrapper.getWarrior().getHealth();
+		int totalHealth = currentWarriorWrapper.getWarrior().getInitialHealth();
+		int porcentualDamage = (currentHealth * 100) / totalHealth;
+		
 		currentWarriorWrapper.getWarrior().setHealth(0);
 		for (BattleFieldListener listener : listeners)
 			listener.warriorKilled(currentWarriorWrapper.getWarrior());
+		
+		
 		
 		for (FieldCell fc : innerAdjs) {
 			if (fc.getFieldCellType() == FieldCellType.BLOCKED) {
@@ -378,9 +384,13 @@ public class BattleField {
 			for (BattleFieldListener listener : listeners)
 				listener.warriorAttacked(attackedWarrior, currentWarriorWrapper.getWarrior(), (int) damage);
 			
-			if (attackedWarrior.getHealth() <= 0)
+			if (attackedWarrior.getHealth() <= 0) {
+				
+				currentWarriorWrapper.getWarrior().enemyKilled();
+				
 				for (BattleFieldListener listener : listeners)
 					listener.warriorKilled(attackedWarrior);
+			}
 		}
 	}
 
