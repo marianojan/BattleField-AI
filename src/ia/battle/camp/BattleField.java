@@ -29,6 +29,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import javax.print.attribute.standard.Media;
+
 //TODO: Mines and enemy flags
 
 //TODO: Las cajas no reaparecen al iniciar una nueva batalla sin cerrar la aplicacion
@@ -325,14 +327,12 @@ public class BattleField {
 			listener.warriorKilled(currentWarriorWrapper.getWarrior());
 		
 		
-		
+		//Destroy walls and special items
 		for (FieldCell fc : innerAdjs) {
 			if (fc.getFieldCellType() == FieldCellType.BLOCKED) {
 				fc.receiveDamage(fc.remainingLive());
 			}
-			fc.removeSpecialItem();
-			
-			
+			fc.removeSpecialItem();			
 		}
 		
 		for (FieldCell fc : middleAdjs) {
@@ -340,8 +340,6 @@ public class BattleField {
 				fc.receiveDamage(fc.remainingLive());
 			}
 			fc.removeSpecialItem();
-			
-			
 		}
 		
 		for (FieldCell fc : outterAdjs) {
@@ -349,8 +347,42 @@ public class BattleField {
 				fc.receiveDamage(fc.remainingLive());
 			}
 			fc.removeSpecialItem();
-			
-			
+		}
+		
+		//Damage enemy warrior
+		for(Warrior w : this.warriors.keySet()) {
+			if (w != currentWarriorWrapper.getWarrior()) {
+				
+				int damage = 0;
+				
+				if (innerAdjs.contains(w.getPosition())) 			
+					damage = (w.getHealth() * porcentualDamage) / 100;
+				
+				if (middleAdjs.contains(w.getPosition())) 			
+					damage = (w.getHealth() * porcentualDamage * 9) / 1000;
+				
+				if (outterAdjs.contains(w.getPosition())) 			
+					damage = (w.getHealth() * porcentualDamage * 7) / 1000;
+				
+				warriors.get(w).receiveDamage(damage);
+				
+				/*
+				 * TODO: Code repeated
+				 */
+				
+				w.wasAttacked((int) damage, center);
+
+				for (BattleFieldListener listener : listeners)
+					listener.warriorAttacked(w, currentWarriorWrapper.getWarrior(), (int) damage);
+				
+				if (w.getHealth() <= 0) {
+					
+					currentWarriorWrapper.getWarrior().enemyKilled();
+					
+					for (BattleFieldListener listener : listeners)
+						listener.warriorKilled(w);
+				}
+			}
 		}
 	}
 
