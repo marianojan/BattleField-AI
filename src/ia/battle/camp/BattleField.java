@@ -29,8 +29,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-import javax.print.attribute.standard.Media;
-
 //TODO: Mines and enemy flags
 
 //TODO: Las cajas no reaparecen al iniciar una nueva batalla sin cerrar la aplicacion
@@ -411,7 +409,7 @@ public class BattleField {
 
 			warriors.get(attackedWarrior).receiveDamage((int) damage);
 
-			attackedWarrior.wasAttacked((int) damage, attack.getCellToAttack());
+			attackedWarrior.wasAttacked((int) damage, currentWarriorWrapper.getWarrior().getPosition());
 
 			for (BattleFieldListener listener : listeners)
 				listener.warriorAttacked(attackedWarrior, currentWarriorWrapper.getWarrior(), (int) damage);
