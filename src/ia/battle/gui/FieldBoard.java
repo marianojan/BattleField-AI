@@ -169,6 +169,9 @@ public class FieldBoard extends JPanel {
         }
 
         g.setColor(Color.BLACK);
+        
+        
+        
         g.drawString(battleField.getTick() + "/10000", +ConfigurationManager.getInstance().getMapHeight() * cellHeight
                 - 100 + offset_x, +offset_y);
 

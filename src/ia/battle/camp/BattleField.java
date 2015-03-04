@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2014, Ing. Gabriel Barrera <gmbarrera@gmail.com>
+ * Copyright (c) 2012-2015, Ing. Gabriel Barrera <gmbarrera@gmail.com>
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above 
@@ -32,6 +32,13 @@ import java.util.Random;
 //TODO: Mines and enemy flags
 
 //TODO: Las cajas no reaparecen al iniciar una nueva batalla sin cerrar la aplicacion
+
+//TODO: Hunters
+
+//TODO: Paredes Moviles
+
+//TODO: Cambio de warriors
+
 
 public class BattleField {
 
@@ -139,6 +146,28 @@ public class BattleField {
 
 		int x = warrior.getPosition().getX();
 		int y = warrior.getPosition().getY();
+
+		if ((Math.pow(centerX - x, 2)) + (Math.pow(centerY - y, 2)) <= Math.pow(range, 2)) {
+			return true;
+		}
+
+		return false;
+	}
+	
+	/**
+	 * Devuelve si el warrior2 esta en el rango de ataque del warrior1.
+	 * 
+	 * @param warrior1, warrior2
+	 * @return
+	 */
+	boolean isWarriorInRange(Warrior warrior1, Warrior warrior2) {
+		int centerX = warrior1.getPosition().getX();
+		int centerY = warrior1.getPosition().getY();
+
+		int range = warrior1.getRange();
+
+		int x = warrior2.getPosition().getX();
+		int y = warrior2.getPosition().getY();
 
 		if ((Math.pow(centerX - x, 2)) + (Math.pow(centerY - y, 2)) <= Math.pow(range, 2)) {
 			return true;
@@ -264,12 +293,12 @@ public class BattleField {
 
 					for (BattleFieldListener listener : listeners)
 						listener.turnLapsed(tick, i, currentWarriorWrapper.getWarrior());
-
-					try {
-						Thread.sleep(50);
-					} catch (InterruptedException ex) {
-						Thread.currentThread().interrupt();
-					}
+//
+//					try {
+//						Thread.sleep(10);
+//					} catch (InterruptedException ex) {
+//						Thread.currentThread().interrupt();
+//					}
 				}
 			} else {
 				if (currentWarriorWrapper == warriorWrapper1)
@@ -278,11 +307,11 @@ public class BattleField {
 					warriorWrapper2 = requestNextWarrior(wm2);
 			}
 
-			try {
-				Thread.sleep(50);
-			} catch (InterruptedException ex) {
-				Thread.currentThread().interrupt();
-			}
+//			try {
+//				//Thread.sleep(10);
+//			} catch (InterruptedException ex) {
+//				Thread.currentThread().interrupt();
+//			}
 
 			for (BattleFieldListener listener : listeners)
 				inFight &= listener.continueFighting();
