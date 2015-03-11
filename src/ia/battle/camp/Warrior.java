@@ -144,6 +144,8 @@ public abstract class Warrior {
 	public abstract void wasAttacked(int damage, FieldCell source);
 
 	public abstract void enemyKilled();
+	
+	public abstract void worldChanged(FieldCell oldCell, FieldCell newCell);
 
 	public boolean useSpecialItem() {
 		return true;

@@ -372,6 +372,9 @@ public class BattleField {
 		
 		for (BattleFieldListener listener : listeners)
 			listener.worldChanged(oldCell, newCell);
+		
+		for (Warrior w : this.warriors.keySet()) 
+			w.worldChanged(oldCell, newCell);
 	}
 
 	private void executeSkipAction() {
