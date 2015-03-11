@@ -33,5 +33,7 @@ public interface BattleFieldListener {
     public void warriorKilled(Warrior killed);
     
     public void warriorMoved(Warrior warrior, FieldCell from, FieldCell to);
+
+	public void worldChanged(FieldCell oldCell, FieldCell newCell);
     
 }

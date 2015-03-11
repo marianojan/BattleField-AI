@@ -218,6 +218,12 @@ public class BattleFieldSetup extends JFrame {
 					}
 				}
 
+				@Override
+				public void worldChanged(FieldCell oldCell, FieldCell newCell) {
+					// TODO Auto-generated method stub
+					
+				}
+
 				
 			});
 

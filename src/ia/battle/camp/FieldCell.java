@@ -36,6 +36,10 @@ public class FieldCell extends Attackable {
 		return fieldCellType;
 	}
 
+	void setFieldCellType(FieldCellType fieldCellType) {
+		this.fieldCellType = fieldCellType;
+	}
+	
 	SpecialItem getSpecialItem() {
 		return specialItem;
 	}
@@ -106,5 +110,6 @@ public class FieldCell extends Attackable {
 	public int remainingLive() {
 		return this.hitPoints;
 	}
+
 
 }

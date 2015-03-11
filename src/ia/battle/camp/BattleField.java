@@ -39,7 +39,6 @@ import java.util.Random;
 
 //TODO: Cambio de warriors
 
-
 public class BattleField {
 
 	private ArrayList<BattleFieldListener> listeners;
@@ -52,7 +51,8 @@ public class BattleField {
 	private boolean inFight;
 
 	private WarriorManager wm1, wm2;
-	private WarriorWrapper currentWarriorWrapper, warriorWrapper1, warriorWrapper2;
+	private WarriorWrapper currentWarriorWrapper, warriorWrapper1,
+			warriorWrapper2;
 	private HashMap<Warrior, WarriorWrapper> warriors;
 
 	private FieldCell[][] cells;
@@ -83,9 +83,12 @@ public class BattleField {
 			for (int j = 0; j < height; j++) {
 
 				if (maze[i][j] == 1)
-					cells[i][j] = new FieldCell(FieldCellType.BLOCKED, i, j, null, Float.POSITIVE_INFINITY);
+					cells[i][j] = new FieldCell(FieldCellType.BLOCKED, i, j,
+							null, Float.POSITIVE_INFINITY);
 				else
-					cells[i][j] = new FieldCell(FieldCellType.NORMAL, i, j, Math.abs(random.nextGaussian()) > 2.5 ? sif.getSpecialItem() : null, 1f);
+					cells[i][j] = new FieldCell(FieldCellType.NORMAL, i, j,
+							Math.abs(random.nextGaussian()) > 2.5 ? sif
+									.getSpecialItem() : null, 1f);
 			}
 	}
 
@@ -107,11 +110,17 @@ public class BattleField {
 		WarriorData enemyData;
 
 		if (currentWarriorWrapper == warriorWrapper1)
-			enemyData = new WarriorData(warriorWrapper2.getWarrior().getPosition(), warriorWrapper2.getWarrior().getHealth(), warriorWrapper2.getWarrior().getName(),
-					isWarriorInRange(warriorWrapper2.getWarrior()), wm1.getCount());
+			enemyData = new WarriorData(warriorWrapper2.getWarrior()
+					.getPosition(), warriorWrapper2.getWarrior().getHealth(),
+					warriorWrapper2.getWarrior().getName(),
+					isWarriorInRange(warriorWrapper2.getWarrior()),
+					wm1.getCount());
 		else
-			enemyData = new WarriorData(warriorWrapper1.getWarrior().getPosition(), warriorWrapper1.getWarrior().getHealth(), warriorWrapper1.getWarrior().getName(),
-					isWarriorInRange(warriorWrapper1.getWarrior()), wm2.getCount());
+			enemyData = new WarriorData(warriorWrapper1.getWarrior()
+					.getPosition(), warriorWrapper1.getWarrior().getHealth(),
+					warriorWrapper1.getWarrior().getName(),
+					isWarriorInRange(warriorWrapper1.getWarrior()),
+					wm2.getCount());
 
 		return enemyData;
 	}
@@ -147,17 +156,19 @@ public class BattleField {
 		int x = warrior.getPosition().getX();
 		int y = warrior.getPosition().getY();
 
-		if ((Math.pow(centerX - x, 2)) + (Math.pow(centerY - y, 2)) <= Math.pow(range, 2)) {
+		if ((Math.pow(centerX - x, 2)) + (Math.pow(centerY - y, 2)) <= Math
+				.pow(range, 2)) {
 			return true;
 		}
 
 		return false;
 	}
-	
+
 	/**
 	 * Devuelve si el warrior2 esta en el rango de ataque del warrior1.
 	 * 
-	 * @param warrior1, warrior2
+	 * @param warrior1
+	 *            , warrior2
 	 * @return
 	 */
 	boolean isWarriorInRange(Warrior warrior1, Warrior warrior2) {
@@ -169,7 +180,8 @@ public class BattleField {
 		int x = warrior2.getPosition().getX();
 		int y = warrior2.getPosition().getY();
 
-		if ((Math.pow(centerX - x, 2)) + (Math.pow(centerY - y, 2)) <= Math.pow(range, 2)) {
+		if ((Math.pow(centerX - x, 2)) + (Math.pow(centerY - y, 2)) <= Math
+				.pow(range, 2)) {
 			return true;
 		}
 
@@ -203,7 +215,20 @@ public class BattleField {
 	private FieldCell getFreeCell() {
 		FieldCell fieldCell = null;
 
-		while ((fieldCell = cells[random.nextInt(configurationManager.getMapWidth())][random.nextInt(configurationManager.getMapHeight())]).getFieldCellType() == FieldCellType.BLOCKED)
+		while ((fieldCell = cells[random.nextInt(configurationManager
+				.getMapWidth())][random.nextInt(configurationManager
+				.getMapHeight())]).getFieldCellType() == FieldCellType.BLOCKED)
+			;
+
+		return fieldCell;
+	}
+	
+	private FieldCell getFieldCell(FieldCellType type) {
+		FieldCell fieldCell = null;
+
+		while ((fieldCell = cells[random.nextInt(configurationManager
+				.getMapWidth())][random.nextInt(configurationManager
+				.getMapHeight())]).getFieldCellType() != type)
 			;
 
 		return fieldCell;
@@ -242,8 +267,10 @@ public class BattleField {
 		tick = 0;
 		inFight = true;
 
-		int actionPerTurns = ConfigurationManager.getInstance().getActionsPerTurn();
-		int warriorPerBattle = ConfigurationManager.getInstance().getMaxWarriorPerBattle();
+		int actionPerTurns = ConfigurationManager.getInstance()
+				.getActionsPerTurn();
+		int warriorPerBattle = ConfigurationManager.getInstance()
+				.getMaxWarriorPerBattle();
 
 		initCells();
 
@@ -279,7 +306,8 @@ public class BattleField {
 
 				for (int i = 0; i < actionPerTurns; i++) {
 
-					currentWarriorAction = currentWarriorWrapper.getWarrior().playTurn(tick, i);
+					currentWarriorAction = currentWarriorWrapper.getWarrior()
+							.playTurn(tick, i);
 
 					if (currentWarriorAction instanceof Move) {
 						executeMoveAction((Move) currentWarriorAction);
@@ -292,13 +320,14 @@ public class BattleField {
 					}
 
 					for (BattleFieldListener listener : listeners)
-						listener.turnLapsed(tick, i, currentWarriorWrapper.getWarrior());
-//
-//					try {
-//						Thread.sleep(10);
-//					} catch (InterruptedException ex) {
-//						Thread.currentThread().interrupt();
-//					}
+						listener.turnLapsed(tick, i,
+								currentWarriorWrapper.getWarrior());
+					//
+					// try {
+					// Thread.sleep(10);
+					// } catch (InterruptedException ex) {
+					// Thread.currentThread().interrupt();
+					// }
 				}
 			} else {
 				if (currentWarriorWrapper == warriorWrapper1)
@@ -307,14 +336,17 @@ public class BattleField {
 					warriorWrapper2 = requestNextWarrior(wm2);
 			}
 
-//			try {
-//				//Thread.sleep(10);
-//			} catch (InterruptedException ex) {
-//				Thread.currentThread().interrupt();
-//			}
+			// try {
+			// //Thread.sleep(10);
+			// } catch (InterruptedException ex) {
+			// Thread.currentThread().interrupt();
+			// }
 
 			for (BattleFieldListener listener : listeners)
 				inFight &= listener.continueFighting();
+
+			if (random.nextInt(100) < 20)
+				changeWorld();
 
 			inFight &= (wm1.getCount() <= warriorPerBattle && wm2.getCount() <= warriorPerBattle);
 
@@ -328,84 +360,99 @@ public class BattleField {
 		}
 	}
 
+	private void changeWorld() {
+
+		FieldCell oldCell, newCell;
+
+		oldCell = getFieldCell(FieldCellType.BLOCKED);
+		newCell = getFieldCell(FieldCellType.NORMAL);
+		
+		oldCell.setFieldCellType(FieldCellType.NORMAL);
+		newCell.setFieldCellType(FieldCellType.BLOCKED);
+		
+		for (BattleFieldListener listener : listeners)
+			listener.worldChanged(oldCell, newCell);
+	}
+
 	private void executeSkipAction() {
 
 	}
 
 	private void executeSuicideAction() {
 		FieldCell center = currentWarriorWrapper.getWarrior().getPosition();
-		
-		List<FieldCell> innerAdjs = BattleField.getInstance().getAdjacentCells(center);
+
+		List<FieldCell> innerAdjs = BattleField.getInstance().getAdjacentCells(
+				center);
 		List<FieldCell> middleAdjs = new ArrayList<FieldCell>();
 		List<FieldCell> outterAdjs = new ArrayList<FieldCell>();
-		
-		for(FieldCell fc : innerAdjs)
+
+		for (FieldCell fc : innerAdjs)
 			middleAdjs.addAll(BattleField.getInstance().getAdjacentCells(fc));
-		
-		for(FieldCell fc : middleAdjs)
+
+		for (FieldCell fc : middleAdjs)
 			outterAdjs.addAll(BattleField.getInstance().getAdjacentCells(fc));
-		
-		int currentHealth  = currentWarriorWrapper.getWarrior().getHealth();
+
+		int currentHealth = currentWarriorWrapper.getWarrior().getHealth();
 		int totalHealth = currentWarriorWrapper.getWarrior().getInitialHealth();
 		int porcentualDamage = (currentHealth * 100) / totalHealth;
-		
+
 		currentWarriorWrapper.getWarrior().setHealth(0);
 		for (BattleFieldListener listener : listeners)
 			listener.warriorKilled(currentWarriorWrapper.getWarrior());
-		
-		
-		//Destroy walls and special items
+
+		// Destroy walls and special items
 		for (FieldCell fc : innerAdjs) {
 			if (fc.getFieldCellType() == FieldCellType.BLOCKED) {
 				fc.receiveDamage(fc.remainingLive());
 			}
-			fc.removeSpecialItem();			
+			fc.removeSpecialItem();
 		}
-		
+
 		for (FieldCell fc : middleAdjs) {
 			if (fc.getFieldCellType() == FieldCellType.BLOCKED) {
 				fc.receiveDamage(fc.remainingLive());
 			}
 			fc.removeSpecialItem();
 		}
-		
+
 		for (FieldCell fc : outterAdjs) {
 			if (fc.getFieldCellType() == FieldCellType.BLOCKED) {
 				fc.receiveDamage(fc.remainingLive());
 			}
 			fc.removeSpecialItem();
 		}
-		
-		//Damage enemy warrior
-		for(Warrior w : this.warriors.keySet()) {
+
+		// Damage enemy warrior
+		for (Warrior w : this.warriors.keySet()) {
 			if (w != currentWarriorWrapper.getWarrior()) {
-				
+
 				int damage = 0;
-				
-				if (innerAdjs.contains(w.getPosition())) 			
+
+				if (innerAdjs.contains(w.getPosition()))
 					damage = (w.getHealth() * porcentualDamage) / 100;
-				
-				if (middleAdjs.contains(w.getPosition())) 			
+
+				if (middleAdjs.contains(w.getPosition()))
 					damage = (w.getHealth() * porcentualDamage * 9) / 1000;
-				
-				if (outterAdjs.contains(w.getPosition())) 			
+
+				if (outterAdjs.contains(w.getPosition()))
 					damage = (w.getHealth() * porcentualDamage * 7) / 1000;
-				
+
 				warriors.get(w).receiveDamage(damage);
-				
+
 				/*
 				 * TODO: Code repeated
 				 */
-				
+
 				w.wasAttacked((int) damage, center);
 
 				for (BattleFieldListener listener : listeners)
-					listener.warriorAttacked(w, currentWarriorWrapper.getWarrior(), (int) damage);
-				
+					listener.warriorAttacked(w,
+							currentWarriorWrapper.getWarrior(), (int) damage);
+
 				if (w.getHealth() <= 0) {
-					
+
 					currentWarriorWrapper.getWarrior().enemyKilled();
-					
+
 					for (BattleFieldListener listener : listeners)
 						listener.warriorKilled(w);
 				}
@@ -418,11 +465,11 @@ public class BattleField {
 
 		float damage = currentWarriorWrapper.getWarrior().getStrength();
 		damage *= random.nextFloat();
-		
+
 		if (attackedWarrior == null) {
 			FieldCell attackedFieldCell = attack.getCellToAttack();
-			attackedFieldCell.receiveDamage((int)damage);
-			
+			attackedFieldCell.receiveDamage((int) damage);
+
 			return;
 		}
 
@@ -438,15 +485,17 @@ public class BattleField {
 
 			warriors.get(attackedWarrior).receiveDamage((int) damage);
 
-			attackedWarrior.wasAttacked((int) damage, currentWarriorWrapper.getWarrior().getPosition());
+			attackedWarrior.wasAttacked((int) damage, currentWarriorWrapper
+					.getWarrior().getPosition());
 
 			for (BattleFieldListener listener : listeners)
-				listener.warriorAttacked(attackedWarrior, currentWarriorWrapper.getWarrior(), (int) damage);
-			
+				listener.warriorAttacked(attackedWarrior,
+						currentWarriorWrapper.getWarrior(), (int) damage);
+
 			if (attackedWarrior.getHealth() <= 0) {
-				
+
 				currentWarriorWrapper.getWarrior().enemyKilled();
-				
+
 				for (BattleFieldListener listener : listeners)
 					listener.warriorKilled(attackedWarrior);
 			}
@@ -484,7 +533,8 @@ public class BattleField {
 		if (x > 0 && y > 0)
 			adjCells.add(cells[x - 1][y - 1]);
 
-		if (x < configurationManager.getMapWidth() - 1 && y < configurationManager.getMapHeight() - 1)
+		if (x < configurationManager.getMapWidth() - 1
+				&& y < configurationManager.getMapHeight() - 1)
 			adjCells.add(cells[x + 1][y + 1]);
 
 		if (x > 0 && y < configurationManager.getMapHeight() - 1)
@@ -496,30 +546,34 @@ public class BattleField {
 		return adjCells;
 	}
 
-	//TODO: Para determinar costo tomar el valor del fieldcell
-	
+	// TODO: Para determinar costo tomar el valor del fieldcell
+
 	private void executeMoveAction(Move action) {
 
 		ArrayList<FieldCell> currentWarriorActionsMoveCells;
 		currentWarriorActionsMoveCells = action.move();
 
-		FieldCell previousCell = currentWarriorWrapper.getWarrior().getPosition();
+		FieldCell previousCell = currentWarriorWrapper.getWarrior()
+				.getPosition();
 
 		for (FieldCell fieldCell : currentWarriorActionsMoveCells) {
 
-			if (fieldCell.getX() == previousCell.getX() || fieldCell.getY() == previousCell.getY())
+			if (fieldCell.getX() == previousCell.getX()
+					|| fieldCell.getY() == previousCell.getY())
 				currentWarriorWrapper.doStep();
 			else
 				currentWarriorWrapper.doStep(1.41f);
 
-			if (currentWarriorWrapper.getSteps() > currentWarriorWrapper.getWarrior().getSpeed() / 5)
+			if (currentWarriorWrapper.getSteps() > currentWarriorWrapper
+					.getWarrior().getSpeed() / 5)
 				return;
 
 			if (!fieldCell.equals(previousCell)) {
 				List<FieldCell> adj = getAdjacentCells(previousCell);
 				if (!adj.contains(fieldCell)) {
 					// TODO: El warrior debe perder
-					System.err.println("Esta trampeando!!!! " + previousCell + " -> " + fieldCell);
+					System.err.println("Esta trampeando!!!! " + previousCell
+							+ " -> " + fieldCell);
 					break;
 				}
 			}
@@ -537,14 +591,23 @@ public class BattleField {
 			FieldCell newPosition = fieldCell;
 
 			try {
-				if (newPosition.getX() >= 0 && newPosition.getX() < ConfigurationManager.getInstance().getMapWidth() && newPosition.getY() >= 0
-						&& newPosition.getY() < ConfigurationManager.getInstance().getMapHeight() && (getFieldCell(newPosition.getX(), newPosition.getY())).getFieldCellType() == FieldCellType.NORMAL) {
+				if (newPosition.getX() >= 0
+						&& newPosition.getX() < ConfigurationManager
+								.getInstance().getMapWidth()
+						&& newPosition.getY() >= 0
+						&& newPosition.getY() < ConfigurationManager
+								.getInstance().getMapHeight()
+						&& (getFieldCell(newPosition.getX(), newPosition.getY()))
+								.getFieldCellType() == FieldCellType.NORMAL) {
 					try {
 
 						for (BattleFieldListener listener : listeners)
-							listener.warriorMoved(currentWarriorWrapper.getWarrior(), currentWarriorWrapper.getWarrior().getPosition(), newPosition);
+							listener.warriorMoved(currentWarriorWrapper
+									.getWarrior(), currentWarriorWrapper
+									.getWarrior().getPosition(), newPosition);
 
-						currentWarriorWrapper.getWarrior().setPosition(newPosition);
+						currentWarriorWrapper.getWarrior().setPosition(
+								newPosition);
 
 					} catch (RuleException e) {
 						e.printStackTrace();
