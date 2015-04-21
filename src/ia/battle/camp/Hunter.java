@@ -16,37 +16,27 @@
 
 package ia.battle.camp;
 
+import java.awt.HeadlessException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 import ia.battle.camp.actions.Action;
+import ia.battle.camp.actions.Attack;
+import ia.battle.camp.actions.Move;
+import ia.battle.camp.actions.Skip;
 import ia.exceptions.RuleException;
 
-public class Hunter {
-	private String name;
-	private int strength, speed, range;
+public class Hunter extends Warrior {
 	private FieldCell position;
-	
-	Hunter(String name, int strength, int speed, int range) {
-		this.name = name;
-		this.strength = strength;
-		this.speed = speed;
-		this.range = range;
-	}
-	
-	String getName() {
-		return name;
+	private Warrior targetWarrior;
+	private int attention;
+
+	Hunter(String name, int health, int defense, int strength, int speed,
+			int range) throws RuleException {
+		super(name, health, defense, strength, speed, range);
 	}
 
-	int getStrength() {
-		return strength;
-	}
-
-	int getSpeed() {
-		return speed;
-	}
-
-	int getRange() {
-		return range;
-	}
-	
 	public FieldCell getPosition() {
 		return position;
 	}
@@ -54,22 +44,99 @@ public class Hunter {
 	void setPosition(FieldCell position) {
 		this.position = position;
 	}
-	
+
 	public Action playTurn(long tick, int actionNumber) {
-		
-		try {
-			for(Warrior warrior : BattleField.getInstance().getWarriors() ){
-				
-				
-				
+		Action action = new Skip();
+		int closerDistance = Integer.MAX_VALUE, distance;
+
+		if (attention == 0) {
+			try {
+				for (Warrior warrior : BattleField.getInstance().getWarriors()) {
+					if (warrior != this) {
+						distance = computeDistance(this.position,
+								warrior.getPosition());
+						if (closerDistance > distance) {
+							closerDistance = distance;
+							targetWarrior = warrior;
+						}
+					}
+				}
+				attention = new Random().nextInt(100) + 50;
+
+			} catch (RuleException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		attention--;
+
+		if (BattleField.getInstance().isWarriorInRange(targetWarrior)) {
+
+			action = new Attack(targetWarrior.getPosition());
+			
+		} else {
+			
+			List<FieldCell> adj = BattleField.getInstance().getAdjacentCells(this.position);
+			FieldCell nextMove = this.position;
+			closerDistance = Integer.MAX_VALUE;
+			
+			for(FieldCell cell : adj) {
+				distance = computeDistance(cell, targetWarrior.getPosition());
+				if ((closerDistance > distance) && (cell.getFieldCellType() != FieldCellType.BLOCKED)) {
+					nextMove = cell;
+					closerDistance = distance;
+				}
 			}
 			
-		} catch (RuleException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			action = new HunterMove(nextMove);
+			
 		}
-		
-		return null;
+
+		return action;
 	}
-	
+
+	private int computeDistance(FieldCell source, FieldCell target) {
+		int distance = 0;
+
+		distance = Math.abs(target.getX() - source.getX());
+		distance += Math.abs(target.getY() - source.getY());
+
+		return distance;
+	}
+
+	@Override
+	public void wasAttacked(int damage, FieldCell source) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void enemyKilled() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void worldChanged(FieldCell oldCell, FieldCell newCell) {
+		// TODO Auto-generated method stub
+
+	}
 }
+
+class HunterMove extends Move {
+
+	private FieldCell nextMove;
+	
+	HunterMove (FieldCell cell) {
+		nextMove = cell;
+	}
+
+	@Override
+	public ArrayList<FieldCell> move() {
+		ArrayList<FieldCell> cells = new ArrayList<FieldCell>();
+		cells.add(nextMove);
+		return cells;
+	}
+}
+

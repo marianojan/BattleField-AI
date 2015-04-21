@@ -1,4 +1,4 @@
-file:/C:/Users/Gabriel/Documents/_ia/BotsBB.jar
-HeisenbergManager
-file:/C:/Users/Gabriel/Documents/_ia/iaqMosconi.jar
-edu.palermo.ia.TurinManager
+file:/C:/Users/Gabriel/Documents/example1.jar
+WMExample1
+file:/C:/Users/Gabriel/Documents/example1.jar
+WMExample1

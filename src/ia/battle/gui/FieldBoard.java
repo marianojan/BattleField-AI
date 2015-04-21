@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2013, Ing. Gabriel Barrera <gmbarrera@gmail.com>
+ * Copyright (c) 2012-2015, Ing. Gabriel Barrera <gmbarrera@gmail.com>
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above 
@@ -37,8 +37,12 @@ public class FieldBoard extends JPanel {
     private static final long serialVersionUID = -1351031450255485371L;
     private static final Image grass = new ImageIcon(FieldBoard.class.getResource("grass.jpg")).getImage();
     private static final Image rocks = new ImageIcon(FieldBoard.class.getResource("wall.png")).getImage();
+    
+    //TODO: Move to a List<Warrior>
     private static final Image warrior1 = new ImageIcon(FieldBoard.class.getResource("warrior1.png")).getImage();
     private static final Image warrior2 = new ImageIcon(FieldBoard.class.getResource("warrior2.png")).getImage();
+    private static final Image hunter = new ImageIcon(FieldBoard.class.getResource("hunter.png")).getImage();
+    
     private static final Image fogOfWar = new ImageIcon(FieldBoard.class.getResource("fogOfWar.png")).getImage();
     private static final Image HPorange = new ImageIcon(FieldBoard.class.getResource("HPorange.png")).getImage();
     private static final Image HPviolet = new ImageIcon(FieldBoard.class.getResource("HPviolet.png")).getImage();
@@ -68,41 +72,22 @@ public class FieldBoard extends JPanel {
 
         int vision1 = 1;
         int vision2 = 1;
+        int vision3 = 1;
 
         int health1 = 100;
         int actualHealth1 = 100;
 
         int health2 = 100;
         int actualHealth2 = 100;
+        
+        int health3 = 100;
+        int actualHealth3 = 100;
 
-        int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
+        int x1 = 0, y1 = 0, x2 = 0, y2 = 0, x3 = 0, y3 = 0;
 
         String nombreW1 = "1";
         String nombreW2 = "2";
-
-        try {
-
-            x1 = battleField.getWarriors().get(0).getPosition().getX();
-            y1 = battleField.getWarriors().get(0).getPosition().getY();
-
-            x2 = battleField.getWarriors().get(1).getPosition().getX();
-            y2 = battleField.getWarriors().get(1).getPosition().getY();
-
-            nombreW1 = battleField.getWarriors().get(0).getName();
-            nombreW2 = battleField.getWarriors().get(1).getName();
-
-            vision1 = battleField.getWarriors().get(0).getRange();
-            vision2 = battleField.getWarriors().get(1).getRange();
-
-            health1 = battleField.getWarriors().get(0).getInitialHealth();
-            health2 = battleField.getWarriors().get(1).getInitialHealth();
-
-            actualHealth1 = battleField.getWarriors().get(0).getHealth();
-            actualHealth2 = battleField.getWarriors().get(1).getHealth();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        String nombreW3 = "Hunter";
 
         Font ft = new Font("Times New Roman", Font.PLAIN, 12);
         g.setColor(Color.RED);
@@ -131,7 +116,38 @@ public class FieldBoard extends JPanel {
 
         Font f = new Font("Times New Roman", Font.PLAIN, 20);
         g.setFont(f);
+        
+        try {
 
+            x1 = battleField.getWarriors().get(0).getPosition().getX();
+            y1 = battleField.getWarriors().get(0).getPosition().getY();
+
+            x2 = battleField.getWarriors().get(1).getPosition().getX();
+            y2 = battleField.getWarriors().get(1).getPosition().getY();
+
+            x3 = battleField.getWarriors().get(2).getPosition().getX();
+            y3 = battleField.getWarriors().get(2).getPosition().getY();
+            
+            nombreW1 = battleField.getWarriors().get(0).getName();
+            nombreW2 = battleField.getWarriors().get(1).getName();
+            nombreW3 = battleField.getWarriors().get(2).getName();
+
+            vision1 = battleField.getWarriors().get(0).getRange();
+            vision2 = battleField.getWarriors().get(1).getRange();
+            vision3 = battleField.getWarriors().get(2).getRange();
+
+            health1 = battleField.getWarriors().get(0).getInitialHealth();
+            health2 = battleField.getWarriors().get(1).getInitialHealth();
+            health3 = battleField.getWarriors().get(2).getInitialHealth();
+
+            actualHealth1 = battleField.getWarriors().get(0).getHealth();
+            actualHealth2 = battleField.getWarriors().get(1).getHealth();
+            actualHealth3 = battleField.getWarriors().get(2).getHealth();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
         // Draw the first warrior
         if (actualHealth1 > 0) {
             g.drawImage(warrior1, x1 * cellWidth + offset_x, y1 * cellHeight + offset_y, cellWidth, cellHeight, this);
@@ -155,12 +171,27 @@ public class FieldBoard extends JPanel {
                     actualHealth2 * 90 / health2, 5, this);
         }
 
+        
+        // Draw the hunter
+        if (actualHealth3 > 0) {
+            g.drawImage(hunter, x3 * cellWidth + offset_x, y3 * cellHeight + offset_y, cellWidth, cellHeight, this);
+
+            g.setColor(Color.RED);
+            g.drawString(nombreW3, (x3 * cellWidth) - (45 - 7) + offset_x, (y3 * cellHeight) - 30 + offset_y);
+            g.drawImage(HPempty, (x3 * cellWidth) - (45 - 7) + offset_x, (y3 * cellHeight) - 30 + offset_y, 90, 5, this);
+            g.drawImage(HPorange, (x3 * cellWidth) - (45 - 7) + offset_x, (y3 * cellHeight) - 30 + offset_y,
+                    actualHealth3 * 90 / health3, 5, this);
+        }
+        
+        
+        
         for (i = 0; i < width; i++) {
 
             for (j = 0; j < height; j++) {
 
                 if (!(((Math.pow(i - x1, 2)) + (Math.pow(j - y1, 2)) <= Math.pow(vision1, 2) && (actualHealth1 > 0))
-                        || ((Math.pow(i - x2, 2)) + (Math.pow(j - y2, 2)) <= Math.pow(vision2, 2) && (actualHealth2 > 0))))
+                   || ((Math.pow(i - x2, 2)) + (Math.pow(j - y2, 2)) <= Math.pow(vision2, 2) && (actualHealth2 > 0))
+                   || ((Math.pow(i - x3, 2)) + (Math.pow(j - y3, 2)) <= Math.pow(vision3, 2) && (actualHealth3 > 0))))
 
                     g.drawImage(fogOfWar, (i) * cellWidth + offset_x, (j) * cellHeight + offset_y, cellWidth,
                             cellHeight, this);

@@ -50,9 +50,11 @@ public class BattleField {
 	private long tick;
 	private boolean inFight;
 
+	private Hunter hunter;
+	
 	private WarriorManager wm1, wm2;
 	private WarriorWrapper currentWarriorWrapper, warriorWrapper1,
-			warriorWrapper2;
+			warriorWrapper2, hunterWrapper;
 	private HashMap<Warrior, WarriorWrapper> warriors;
 
 	private FieldCell[][] cells;
@@ -124,6 +126,24 @@ public class BattleField {
 
 		return enemyData;
 	}
+	
+	/**
+	 * Returns basic information about the hunter
+	 * 
+	 * @return
+	 */
+	public WarriorData getHunterData() {
+
+		WarriorData enemyData;
+
+		enemyData = new WarriorData(hunter.getPosition(), hunter.getHealth(),
+				hunter.getName(),
+				isWarriorInRange(hunter),
+				1);
+
+		return enemyData;
+	}
+
 
 	/**
 	 * Este metodo es para uso interno del framework. Su uso es ilegal.
@@ -137,7 +157,8 @@ public class BattleField {
 
 		warriors.add(warriorWrapper1.getWarrior());
 		warriors.add(warriorWrapper2.getWarrior());
-
+		warriors.add(hunter);
+		
 		return warriors;
 	}
 
@@ -222,7 +243,7 @@ public class BattleField {
 
 		return fieldCell;
 	}
-	
+
 	private FieldCell getFieldCell(FieldCellType type) {
 		FieldCell fieldCell = null;
 
@@ -279,6 +300,16 @@ public class BattleField {
 		warriorWrapper1 = requestNextWarrior(wm1);
 		warriorWrapper2 = requestNextWarrior(wm2);
 
+		//Create the hunter
+		try {
+			hunter = new Hunter("The Hunter", 10, 10, 10, 10, 5);
+			hunterWrapper = new WarriorWrapper(hunter);
+		} catch (RuleException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		hunter.setPosition(getFreeCell());
+		
 		for (BattleFieldListener listener : listeners)
 			listener.startFight();
 
@@ -322,12 +353,12 @@ public class BattleField {
 					for (BattleFieldListener listener : listeners)
 						listener.turnLapsed(tick, i,
 								currentWarriorWrapper.getWarrior());
-					//
-					// try {
-					// Thread.sleep(10);
-					// } catch (InterruptedException ex) {
-					// Thread.currentThread().interrupt();
-					// }
+					
+//					 try {
+//					 Thread.sleep(10);
+//					 } catch (InterruptedException ex) {
+//					 Thread.currentThread().interrupt();
+//					 }
 				}
 			} else {
 				if (currentWarriorWrapper == warriorWrapper1)
@@ -336,16 +367,36 @@ public class BattleField {
 					warriorWrapper2 = requestNextWarrior(wm2);
 			}
 
-			// try {
-			// //Thread.sleep(10);
-			// } catch (InterruptedException ex) {
-			// Thread.currentThread().interrupt();
-			// }
+//			 try {
+//			 Thread.sleep(10);
+//			 } catch (InterruptedException ex) {
+//			 Thread.currentThread().interrupt();
+//			 }
 
+			//every 3 ticks the Hunter make his action
+			if (tick % 3 == 0) {
+				
+				currentWarriorWrapper = hunterWrapper;
+				currentWarriorWrapper.startTurn();
+				
+				for (int i = 0; i < actionPerTurns; i++) {
+					
+					Action hunterAction = hunter.playTurn(tick, i);
+					
+					if (hunterAction instanceof Move) {
+						executeMoveAction((Move) hunterAction);
+					} else if (hunterAction instanceof Attack) {
+						executeAttackAction((Attack) hunterAction);
+					}
+					
+				}
+				
+			}
+			
 			for (BattleFieldListener listener : listeners)
 				inFight &= listener.continueFighting();
 
-			if (random.nextInt(100) < 20)
+			if (random.nextInt(100) < 15)
 				changeWorld();
 
 			inFight &= (wm1.getCount() <= warriorPerBattle && wm2.getCount() <= warriorPerBattle);
@@ -367,14 +418,26 @@ public class BattleField {
 		oldCell = getFieldCell(FieldCellType.BLOCKED);
 		newCell = getFieldCell(FieldCellType.NORMAL);
 		
+		boolean validCell = false;
+		
+		while (!validCell) {
+			
+			validCell = true;
+			
+			for (Warrior w : this.warriors.keySet()) {
+				if (newCell.equals(w.getPosition()))
+					validCell = false;
+			}
+		}
+
 		oldCell.setFieldCellType(FieldCellType.NORMAL);
 		newCell.setFieldCellType(FieldCellType.BLOCKED);
-		
+
 		for (BattleFieldListener listener : listeners)
 			listener.worldChanged(oldCell, newCell);
-		
-		for (Warrior w : this.warriors.keySet()) 
-			w.worldChanged(oldCell, newCell);
+
+//		for (Warrior w : this.warriors.keySet())
+//			w.worldChanged(oldCell, newCell);
 	}
 
 	private void executeSkipAction() {
@@ -465,7 +528,12 @@ public class BattleField {
 
 	private void executeAttackAction(Attack attack) {
 		Warrior attackedWarrior = findWarriorInMap(attack.getCellToAttack());
-
+		
+		if (attackedWarrior == hunter) {
+			hunter.wasAttacked(0, currentWarriorWrapper.getWarrior().getPosition());
+			return;
+		}
+		
 		float damage = currentWarriorWrapper.getWarrior().getStrength();
 		damage *= random.nextFloat();
 
@@ -476,9 +544,9 @@ public class BattleField {
 			return;
 		}
 
-		if (!isWarriorInRange(attackedWarrior))
+		if (!isWarriorInRange(attackedWarrior)) 
 			return;
-
+		
 		float defense = attackedWarrior.getDefense();
 		defense *= (random.nextFloat() / 0.75 + 0.25);
 
