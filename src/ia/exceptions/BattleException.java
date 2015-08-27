@@ -16,12 +16,11 @@
 
 package ia.exceptions;
 
-import ia.battle.camp.Warrior;
 
 public class BattleException extends Exception {
 
 	private static final long serialVersionUID = -5517726053602708552L;
-	private Warrior warrior;
+//	private Warrior warrior;
 
 	
 	

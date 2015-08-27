@@ -16,16 +16,15 @@
 
 package ia.battle.camp;
 
-import java.awt.HeadlessException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 import ia.battle.camp.actions.Action;
 import ia.battle.camp.actions.Attack;
 import ia.battle.camp.actions.Move;
 import ia.battle.camp.actions.Skip;
 import ia.exceptions.RuleException;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class Hunter extends Warrior {
 	private FieldCell position;
@@ -47,6 +46,10 @@ public class Hunter extends Warrior {
 
 	public Action playTurn(long tick, int actionNumber) {
 		Action action = new Skip();
+		
+		return action;
+		
+		/*
 		int closerDistance = Integer.MAX_VALUE, distance;
 
 		if (attention == 0) {
@@ -94,6 +97,7 @@ public class Hunter extends Warrior {
 		}
 
 		return action;
+		*/
 	}
 
 	private int computeDistance(FieldCell source, FieldCell target) {

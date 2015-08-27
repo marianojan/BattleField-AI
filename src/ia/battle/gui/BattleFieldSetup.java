@@ -37,9 +37,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.net.URL;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
@@ -194,12 +191,12 @@ public class BattleFieldSetup extends JFrame {
 
 				public void warriorAttacked(Warrior attacked, Warrior attacker,
 						int damage) {
-					soundPlayer.playAttack();
+				//	soundPlayer.playAttack();
 				}
 
 				@Override
 				public void warriorKilled(Warrior killed) {
-					soundPlayer.playBotKilled();
+				//	soundPlayer.playBotKilled();
 				}
 				
 				@Override

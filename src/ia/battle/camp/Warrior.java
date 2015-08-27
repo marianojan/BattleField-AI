@@ -80,8 +80,7 @@ public abstract class Warrior {
 		if (health <= 0 || defense <= 0 || strength <= 0 || speed <= 0 || range <= 0)
 			throw new RuleException();
 
-		int maxRange = Math.min(ConfigurationManager.getInstance().getMapHeight(), ConfigurationManager.getInstance().getMapHeight());
-		maxRange /= 4; 
+		int maxRange = ConfigurationManager.getInstance().getMaxRangeForWarrior();
 		if (range > maxRange)
 			this.range = maxRange;
 	}

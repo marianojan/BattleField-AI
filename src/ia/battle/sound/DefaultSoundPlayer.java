@@ -10,9 +10,7 @@ public class DefaultSoundPlayer implements SoundPlayer {
 	public void playAttack() {
 		try {
 			Clip clip = AudioSystem.getClip();
-			AudioInputStream inputStream = AudioSystem
-					.getAudioInputStream(SoundPlayer.class
-							.getResourceAsStream("hit.wav"));
+			AudioInputStream inputStream = AudioSystem.getAudioInputStream(SoundPlayer.class.getResourceAsStream("hit.wav"));
 			clip.open(inputStream);
 			clip.start();
 		} catch (Exception ex) {
@@ -24,9 +22,7 @@ public class DefaultSoundPlayer implements SoundPlayer {
 	public void playBotKilled() {
 		try {
 			Clip clip = AudioSystem.getClip();
-			AudioInputStream inputStream = AudioSystem
-					.getAudioInputStream(SoundPlayer.class
-							.getResourceAsStream("killed.wav"));
+			AudioInputStream inputStream = AudioSystem.getAudioInputStream(SoundPlayer.class.getResourceAsStream("killed.wav"));
 			clip.open(inputStream);
 			clip.start();
 		} catch (Exception ex) {

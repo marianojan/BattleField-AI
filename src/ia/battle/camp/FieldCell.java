@@ -111,5 +111,9 @@ public class FieldCell extends Attackable {
 		return this.hitPoints;
 	}
 
+	void setSpecialItem(SpecialItem si) {
+		specialItem = si;
+	}
+
 
 }
