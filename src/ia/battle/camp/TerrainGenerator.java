@@ -31,37 +31,62 @@ class TerrainGenerator {
 		int x, y;
 		int[][] maze = new int[width][height];
 		Random rnd = new Random();
-		int basePoints = rnd.nextInt(30) + 10;
+		int basePoints = rnd.nextInt(40) + 20;
 
 		for (int i = 0; i < basePoints; i++) {
-			x = rnd.nextInt(width);
-			y = rnd.nextInt(height);
-
-			maze[x][y] = 2;
 			
-			if (x > 0 && y < height - 1)
-				maze[x - 1][y + 1] = 1;
-			
-			if (x > 0 && y > 0)
-				maze[x - 1][y - 1] = 1;
-			
-			if (x > 0)
-				maze[x - 1][y] = 1;
-			
-			if (x < width - 1)
+			if (rnd.nextBoolean()) {
+				x = rnd.nextInt(width - 6);
+				y = rnd.nextInt(height - 3);
+				
+				maze[x][y] = 1;	
+				
 				maze[x + 1][y] = 1;
-			
-			if (x < width - 1 && y < height - 1)
-				maze[x + 1][y + 1] = 1;
-			
-			if (x < width - 1 && y > 0)
-				maze[x + 1][y - 1] = 1;
-			
-			if (y < height - 1)
+				maze[x + 2][y] = 1;
+				maze[x + 3][y] = 1;
+				maze[x + 4][y] = 1;
+				maze[x + 5][y] = 1;
+				
 				maze[x][y + 1] = 1;
-			
-			if (y > 0)
-				maze[x][y - 1] = 1;
+				maze[x + 1][y + 1] = 1;
+				maze[x + 2][y + 1] = 1;
+				maze[x + 3][y + 1] = 1;
+				maze[x + 4][y + 1] = 1;
+				maze[x + 5][y + 1] = 1;
+				
+				maze[x][y + 2] = 1;
+				maze[x + 1][y + 2] = 1;
+				maze[x + 2][y + 2] = 1;
+				maze[x + 3][y + 2] = 1;
+				maze[x + 4][y + 2] = 1;
+				maze[x + 5][y + 2] = 1;
+				
+			} else {
+				x = rnd.nextInt(width - 3);
+				y = rnd.nextInt(height - 6);
+				
+				maze[x][y] = 1;
+				
+				maze[x][y + 1] = 1;
+				maze[x][y + 2] = 1;
+				maze[x][y + 3] = 1;
+				maze[x][y + 4] = 1;
+				maze[x][y + 5] = 1;
+				
+				maze[x + 1][y] = 1;
+				maze[x + 1][y + 1] = 1;
+				maze[x + 1][y + 2] = 1;
+				maze[x + 1][y + 3] = 1;
+				maze[x + 1][y + 4] = 1;
+				maze[x + 1][y + 5] = 1;
+				
+				maze[x + 2][y] = 1;
+				maze[x + 2][y + 1] = 1;
+				maze[x + 2][y + 2] = 1;
+				maze[x + 2][y + 3] = 1;
+				maze[x + 2][y + 4] = 1;
+				maze[x + 2][y + 5] = 1;
+			}
 		}
 
 		return maze;
@@ -77,7 +102,5 @@ class TerrainGenerator {
 			}
 			System.out.println();
 		}
-
 	}
-
 }
