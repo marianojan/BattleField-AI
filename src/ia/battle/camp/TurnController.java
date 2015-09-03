@@ -42,7 +42,12 @@ class TurnController {
 	}
 
 	WarriorWrapper nextWarriorWrapper() {
-		currentPosition %= wrappers.size();
+		currentPosition = (currentPosition + 1) % wrappers.size();
 		return wrappers.get(currentPosition);
+	}
+
+	void replaceWarrior(WarriorWrapper oldWarrior, WarriorWrapper newWarrior) {
+		int position = wrappers.indexOf(oldWarrior);
+		wrappers.set(position, newWarrior);
 	}
 }

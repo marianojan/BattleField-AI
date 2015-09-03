@@ -16,6 +16,11 @@
 
 package ia.battle.camp;
 
+/***
+ * 
+ * @author Gabriel Barrera
+ *
+ */
  public abstract class Attackable {
 	 abstract void receiveDamage(int damage);
 	 abstract int remainingLive();

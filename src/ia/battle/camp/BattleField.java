@@ -289,9 +289,9 @@ public class BattleField {
 			e.printStackTrace();
 		}
 		hunter.setPosition(getFreeCell());
-
+		
 		turnController = new TurnController(warriorWrapper1, warriorWrapper2, hunterWrapper);
-
+		
 		for (BattleFieldListener listener : listeners)
 			listener.startFight();
 
@@ -321,17 +321,18 @@ public class BattleField {
 					for (BattleFieldListener listener : listeners)
 						listener.turnLapsed(tick, i, currentWarriorWrapper.getWarrior());
 
-					// try {
-					// Thread.sleep(10);
-					// } catch (InterruptedException ex) {
-					// Thread.currentThread().interrupt();
-					// }
+					 try {
+					 Thread.sleep(10);
+					 } catch (InterruptedException ex) {
+					 Thread.currentThread().interrupt();
+					 }
 				}
 			} else {
-				if (currentWarriorWrapper == warriorWrapper1)
-					warriorWrapper1 = requestNextWarrior(wm1);
-				else if (currentWarriorWrapper == warriorWrapper2)
-					warriorWrapper2 = requestNextWarrior(wm2);
+				//TODO: Change for multiple warriors
+				if (currentWarriorWrapper == warriorWrapper1) 
+					turnController.replaceWarrior(warriorWrapper1, warriorWrapper1 = requestNextWarrior(wm1));
+				else if (currentWarriorWrapper == warriorWrapper2) 
+					turnController.replaceWarrior(warriorWrapper2, warriorWrapper2 = requestNextWarrior(wm2));
 			}
 
 			updateWorld();
@@ -356,7 +357,7 @@ public class BattleField {
 //		if (random.nextInt(100) < 3)
 //			changeWorld();
 //
-//		if (random.nextInt(100) < 5)
+//		if (random.nextInt(100) == 0)
 //			addNewSpecialItem();
 	}
 

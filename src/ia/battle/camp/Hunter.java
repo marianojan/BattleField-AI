@@ -30,10 +30,13 @@ public class Hunter extends Warrior {
 	private FieldCell position;
 	private Warrior targetWarrior;
 	private int attention;
-
+	private ArrayList<FieldCell> previousCells;
+	
 	Hunter(String name, int health, int defense, int strength, int speed,
 			int range) throws RuleException {
 		super(name, health, defense, strength, speed, range);
+		
+		previousCells = new ArrayList<FieldCell>();
 	}
 
 	public FieldCell getPosition() {
@@ -45,19 +48,15 @@ public class Hunter extends Warrior {
 	}
 
 	public Action playTurn(long tick, int actionNumber) {
-		Action action = new Skip();
+		Action action;
 		
-		return action;
-		
-		/*
 		int closerDistance = Integer.MAX_VALUE, distance;
 
 		if (attention == 0) {
 			try {
 				for (Warrior warrior : BattleField.getInstance().getWarriors()) {
 					if (warrior != this) {
-						distance = computeDistance(this.position,
-								warrior.getPosition());
+						distance = computeDistance(this.position, warrior.getPosition());
 						if (closerDistance > distance) {
 							closerDistance = distance;
 							targetWarrior = warrior;
@@ -71,9 +70,9 @@ public class Hunter extends Warrior {
 				e.printStackTrace();
 			}
 		}
-
+		
 		attention--;
-
+		
 		if (BattleField.getInstance().isWarriorInRange(targetWarrior)) {
 
 			action = new Attack(targetWarrior.getPosition());
@@ -86,18 +85,17 @@ public class Hunter extends Warrior {
 			
 			for(FieldCell cell : adj) {
 				distance = computeDistance(cell, targetWarrior.getPosition());
-				if ((closerDistance > distance) && (cell.getFieldCellType() != FieldCellType.BLOCKED)) {
+				if ((closerDistance > distance) && (cell.getFieldCellType() != FieldCellType.BLOCKED) &&
+						!cell.equals(this.position)) {
 					nextMove = cell;
 					closerDistance = distance;
 				}
 			}
 			
 			action = new HunterMove(nextMove);
-			
 		}
 
 		return action;
-		*/
 	}
 
 	private int computeDistance(FieldCell source, FieldCell target) {
@@ -117,8 +115,8 @@ public class Hunter extends Warrior {
 
 	@Override
 	public void enemyKilled() {
-		// TODO Auto-generated method stub
-
+		System.out.println("Warrior Killed by the Hunter!");
+		attention = 0;
 	}
 
 	@Override
