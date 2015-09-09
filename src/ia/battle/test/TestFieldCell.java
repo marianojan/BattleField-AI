@@ -16,7 +16,7 @@ public class TestFieldCell {
 			if (f1.equals(f2))
 				System.out.println("Igual");
 
-		} catch (OutOfMapException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

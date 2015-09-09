@@ -108,7 +108,7 @@ public class FieldBoard extends JPanel {
                             g.drawImage(box, i * cellWidth + offset_x, j * cellHeight + offset_y, cellWidth,
                                     cellHeight, this);
                     }
-                } catch (OutOfMapException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

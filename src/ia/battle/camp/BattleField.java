@@ -87,10 +87,10 @@ public class BattleField {
 			}
 	}
 
-	public FieldCell getFieldCell(int x, int y) throws OutOfMapException {
+	public FieldCell getFieldCell(int x, int y) { //throws OutOfMapException {
 
-		if ((x >= cells.length) || (x < 0) || (y >= cells[0].length) || (y < 0))
-			throw new OutOfMapException();
+//		if ((x >= cells.length) || (x < 0) || (y >= cells[0].length) || (y < 0))
+//			throw new OutOfMapException();
 
 		return cells[x][y];
 	}
@@ -299,15 +299,21 @@ public class BattleField {
 			tick++;
 
 			currentWarriorWrapper = turnController.nextWarriorWrapper();
-
-			if (currentWarriorWrapper.getWarrior().getHealth() > 0) {
-
+			
+			if (currentWarriorWrapper.getWarrior().getHealth() <= 0) {
+				//TODO: Change for multiple warriors
+				if (currentWarriorWrapper == warriorWrapper1) 
+					turnController.replaceWarrior(warriorWrapper1, warriorWrapper1 = requestNextWarrior(wm1));
+				else if (currentWarriorWrapper == warriorWrapper2) 
+					turnController.replaceWarrior(warriorWrapper2, warriorWrapper2 = requestNextWarrior(wm2));
+			} else {
+				
 				currentWarriorWrapper.startTurn();
-
+	
 				for (int i = 0; i < actionPerTurns; i++) {
-
+	
 					currentWarriorAction = currentWarriorWrapper.getWarrior().playTurn(tick, i);
-
+	
 					if (currentWarriorAction instanceof Move) {
 						executeMoveAction((Move) currentWarriorAction);
 					} else if (currentWarriorAction instanceof Attack) {
@@ -317,22 +323,16 @@ public class BattleField {
 					} else if (currentWarriorAction instanceof Suicide) {
 						executeSuicideAction();
 					}
-
+	
 					for (BattleFieldListener listener : listeners)
 						listener.turnLapsed(tick, i, currentWarriorWrapper.getWarrior());
-
+	
 					 try {
-					 Thread.sleep(10);
+						 Thread.sleep(10);
 					 } catch (InterruptedException ex) {
-					 Thread.currentThread().interrupt();
+						 Thread.currentThread().interrupt();
 					 }
 				}
-			} else {
-				//TODO: Change for multiple warriors
-				if (currentWarriorWrapper == warriorWrapper1) 
-					turnController.replaceWarrior(warriorWrapper1, warriorWrapper1 = requestNextWarrior(wm1));
-				else if (currentWarriorWrapper == warriorWrapper2) 
-					turnController.replaceWarrior(warriorWrapper2, warriorWrapper2 = requestNextWarrior(wm2));
 			}
 
 			updateWorld();
@@ -488,7 +488,7 @@ public class BattleField {
 		}
 
 		float damage = currentWarriorWrapper.getWarrior().getStrength();
-		damage *= random.nextFloat();
+		damage *= (random.nextFloat() / 0.75 + 0.25);
 
 		if (attackedWarrior == null) {
 			FieldCell attackedFieldCell = attack.getCellToAttack();
@@ -622,7 +622,7 @@ public class BattleField {
 						e.printStackTrace();
 					}
 				}
-			} catch (OutOfMapException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
