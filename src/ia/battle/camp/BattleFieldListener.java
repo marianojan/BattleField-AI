@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2014, Ing. Gabriel Barrera <gmbarrera@gmail.com>
+ * Copyright (c) 2012-2015, Ing. Gabriel Barrera <gmbarrera@gmail.com>
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above 
@@ -36,4 +36,5 @@ public interface BattleFieldListener {
 
 	public void worldChanged(FieldCell oldCell, FieldCell newCell);
     
+	public void statsChanged(String managerName1, int warriorsKilled1, String managerName2, int warriorsKilled2);
 }

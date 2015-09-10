@@ -22,12 +22,13 @@ import javax.swing.JFrame;
 
 public class Frame extends JFrame {
 
-	/**
-     * 
-     */
     private static final long serialVersionUID = 4075492093234749056L;
     private FieldBoard mainBoard;
 
+    FieldBoard getFieldBoard() {
+    	return this.mainBoard;
+    }
+    
 	public Frame(BattleField battleField, int offset_x, int offset_y) {
 
 		mainBoard = new FieldBoard(battleField, offset_x, offset_y);

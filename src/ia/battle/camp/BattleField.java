@@ -294,7 +294,10 @@ public class BattleField {
 		
 		for (BattleFieldListener listener : listeners)
 			listener.startFight();
-
+		
+		for (BattleFieldListener listener : listeners)
+			listener.statsChanged(wm1.getName(), wm1.getCount(), wm2.getName(), wm2.getCount());
+		
 		do {
 			tick++;
 
@@ -306,6 +309,10 @@ public class BattleField {
 					turnController.replaceWarrior(warriorWrapper1, warriorWrapper1 = requestNextWarrior(wm1));
 				else if (currentWarriorWrapper == warriorWrapper2) 
 					turnController.replaceWarrior(warriorWrapper2, warriorWrapper2 = requestNextWarrior(wm2));
+				
+				for (BattleFieldListener listener : listeners)
+					listener.statsChanged(wm1.getName(), wm1.getCount(), wm2.getName(), wm2.getCount());
+				
 			} else {
 				
 				currentWarriorWrapper.startTurn();

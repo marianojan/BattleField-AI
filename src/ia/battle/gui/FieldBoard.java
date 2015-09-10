@@ -27,6 +27,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class FieldBoard extends JPanel {
@@ -55,7 +56,13 @@ public class FieldBoard extends JPanel {
     private BattleField battleField;
     private int offset_x, offset_y;
 
-    public FieldBoard(BattleField battleField, int offset_x, int offset_y) {
+    private String warriorManagerName1;
+    private int warriorsKilled1;
+    private String warriorManagerName2;
+    private int warriorsKilled2;
+    
+
+	public FieldBoard(BattleField battleField, int offset_x, int offset_y) {
 
         this.battleField = battleField;
         this.offset_x = offset_x;
@@ -63,6 +70,38 @@ public class FieldBoard extends JPanel {
 
     }
 
+    String getWarriorManagerName1() {
+		return warriorManagerName1;
+	}
+
+	void setWarriorManagerName1(String warriorManagerName1) {
+		this.warriorManagerName1 = warriorManagerName1;
+	}
+
+	int getWarriorsKilled1() {
+		return warriorsKilled1;
+	}
+
+	void setWarriorsKilled1(int warriorsKilled1) {
+		this.warriorsKilled1 = warriorsKilled1;
+	}
+
+	String getWarriorManagerName2() {
+		return warriorManagerName2;
+	}
+
+	void setWarriorManagerName2(String warriorManagerName2) {
+		this.warriorManagerName2 = warriorManagerName2;
+	}
+
+	int getWarriorsKilled2() {
+		return warriorsKilled2;
+	}
+
+	void setWarriorsKilled2(int warriorsKilled2) {
+		this.warriorsKilled2 = warriorsKilled2;
+	}
+	
     public void paint(Graphics g) {
         int i, j;
         super.paint(g);
@@ -204,7 +243,14 @@ public class FieldBoard extends JPanel {
         
         
         g.drawString(battleField.getTick() + "/10000", +ConfigurationManager.getInstance().getMapHeight() * cellHeight
-                - 100 + offset_x, +offset_y);
-
+                + offset_x, +offset_y);
+        
+        g.drawString(warriorManagerName1 + ": " + Integer.toString(warriorsKilled1), +ConfigurationManager.getInstance().getMapHeight() * cellHeight
+                - 200 + offset_x, +offset_y);
+        
+        g.drawString(warriorManagerName2 + ": " + Integer.toString(warriorsKilled2), +ConfigurationManager.getInstance().getMapHeight() * cellHeight
+                - 500 + offset_x, +offset_y);
+        
+        
     }
 }

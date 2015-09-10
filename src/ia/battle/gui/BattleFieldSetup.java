@@ -221,6 +221,16 @@ public class BattleFieldSetup extends JFrame {
 					
 				}
 
+				@Override
+				public void statsChanged(String managerName1, int warriorsKilled1, String managerName2, int warriorsKilled2) {
+					
+					frame.getFieldBoard().setWarriorManagerName1(managerName1);
+					frame.getFieldBoard().setWarriorManagerName2(managerName2);
+					frame.getFieldBoard().setWarriorsKilled1(warriorsKilled1);
+					frame.getFieldBoard().setWarriorsKilled2(warriorsKilled2);
+					
+				}
+
 				
 			});
 
