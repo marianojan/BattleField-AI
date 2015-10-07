@@ -101,6 +101,7 @@ public class FieldCell extends Attackable {
 		if (this.hitPoints <= damage) {
 			this.hitPoints  = 0;
 			this.fieldCellType = FieldCellType.NORMAL;
+			this.cost = 1f;
 		}
 		else
 			this.hitPoints -= damage;

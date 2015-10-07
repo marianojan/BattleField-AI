@@ -81,9 +81,15 @@ public class BattleField {
 
 				if (maze[i][j] == 1)
 					cells[i][j] = new FieldCell(FieldCellType.BLOCKED, i, j, null, Float.POSITIVE_INFINITY);
-				else
+				else {
+					float cost = 1f;
+					
+					if (random.nextGaussian() > 2f)
+						cost = 1.5f;
+					
 					cells[i][j] = new FieldCell(FieldCellType.NORMAL, i, j,
-							Math.abs(random.nextGaussian()) > 2.5 ? specialItemFactory.getSpecialItem() : null, 1f);
+							Math.abs(random.nextGaussian()) > 2.5f ? specialItemFactory.getSpecialItem() : null, cost);
+				}
 			}
 	}
 
@@ -241,7 +247,7 @@ public class BattleField {
 
 		try {
 			wwrapper = new WarriorWrapper(wm.getNewWarrior());
-
+			System.out.println(wwrapper.getWarrior().getSpeed());
 			if (wwrapper.getWarrior().getName() == null)
 				wwrapper.getWarrior().setName("Sin Nombre " + wm.hashCode());
 
@@ -282,7 +288,7 @@ public class BattleField {
 
 		// Create the hunter
 		try {
-			hunter = new Hunter("The Hunter", 10, 10, 10, 10, 5);
+			hunter = new Hunter("The Hunter", 10, 10, 1, 10, 5);
 			hunterWrapper = new WarriorWrapper(hunter);
 		} catch (RuleException e) {
 			// TODO Auto-generated catch block
@@ -335,7 +341,7 @@ public class BattleField {
 						listener.turnLapsed(tick, i, currentWarriorWrapper.getWarrior());
 	
 					 try {
-						 Thread.sleep(10);
+						 Thread.sleep(50);
 					 } catch (InterruptedException ex) {
 						 Thread.currentThread().interrupt();
 					 }
@@ -584,54 +590,49 @@ public class BattleField {
 		FieldCell previousCell = currentWarriorWrapper.getWarrior().getPosition();
 
 		for (FieldCell fieldCell : currentWarriorActionsMoveCells) {
-
+			
+			if (!(fieldCell.getX() >= 0 && fieldCell.getX() < ConfigurationManager.getInstance().getMapWidth() 
+				  && fieldCell.getY() >= 0
+				  && fieldCell.getY() < ConfigurationManager.getInstance().getMapHeight()
+				  && (getFieldCell(fieldCell.getX(), fieldCell.getY())).getFieldCellType() == FieldCellType.NORMAL)) {
+			
+				break;
+			}
+			
 			if (fieldCell.getX() == previousCell.getX() || fieldCell.getY() == previousCell.getY())
-				currentWarriorWrapper.doStep();
+				currentWarriorWrapper.doStep(fieldCell.getCost());
 			else
-				currentWarriorWrapper.doStep(1.41f);
+				currentWarriorWrapper.doStep(fieldCell.getCost() * 1.41f);
 
+			List<FieldCell> adj = getAdjacentCells(previousCell);
+			if (!adj.contains(fieldCell)) {
+				currentWarriorWrapper.receiveDamage(currentWarriorWrapper.getWarrior().getHealth());
+				System.err.println("Esta trampeando " + currentWarriorWrapper.getWarrior().getName() + "!!!! " + previousCell + " -> " + fieldCell);
+				break;
+			}
+			
 			if (currentWarriorWrapper.getSteps() > currentWarriorWrapper.getWarrior().getSpeed() / 5)
 				return;
-
-			if (!fieldCell.equals(previousCell)) {
-				List<FieldCell> adj = getAdjacentCells(previousCell);
-				if (!adj.contains(fieldCell)) {
-					// TODO: El warrior debe perder
-					System.err.println("Esta trampeando!!!! " + previousCell + " -> " + fieldCell);
-					break;
-				}
-			}
-
+			
 			previousCell = fieldCell;
 
 			if (fieldCell.getSpecialItem() != null) {
-
-				SpecialItem si = fieldCell.removeSpecialItem();
 				if (currentWarriorWrapper.getWarrior().useSpecialItem()) {
+					SpecialItem si = fieldCell.removeSpecialItem();
 					si.affectWarrior(currentWarriorWrapper);
 				}
 			}
 
-			FieldCell newPosition = fieldCell;
+			for (BattleFieldListener listener : listeners)
+				listener.warriorMoved(currentWarriorWrapper.getWarrior(), currentWarriorWrapper.getWarrior().getPosition(), fieldCell);
 
 			try {
-				if (newPosition.getX() >= 0 && newPosition.getX() < ConfigurationManager.getInstance().getMapWidth() && newPosition.getY() >= 0
-						&& newPosition.getY() < ConfigurationManager.getInstance().getMapHeight()
-						&& (getFieldCell(newPosition.getX(), newPosition.getY())).getFieldCellType() == FieldCellType.NORMAL) {
-					try {
-
-						for (BattleFieldListener listener : listeners)
-							listener.warriorMoved(currentWarriorWrapper.getWarrior(), currentWarriorWrapper.getWarrior().getPosition(), newPosition);
-
-						currentWarriorWrapper.getWarrior().setPosition(newPosition);
-
-					} catch (RuleException e) {
-						e.printStackTrace();
-					}
-				}
-			} catch (Exception e) {
+				currentWarriorWrapper.getWarrior().setPosition(fieldCell);
+			} catch (RuleException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+	
 		}
 	}
 

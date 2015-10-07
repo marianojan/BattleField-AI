@@ -37,6 +37,7 @@ public class FieldBoard extends JPanel {
      */
     private static final long serialVersionUID = -1351031450255485371L;
     private static final Image grass = new ImageIcon(FieldBoard.class.getResource("grass.jpg")).getImage();
+    private static final Image swamp = new ImageIcon(FieldBoard.class.getResource("swamp.jpg")).getImage();
     private static final Image rocks = new ImageIcon(FieldBoard.class.getResource("wall.png")).getImage();
     
     //TODO: Move to a List<Warrior>
@@ -131,13 +132,16 @@ public class FieldBoard extends JPanel {
         Font ft = new Font("Times New Roman", Font.PLAIN, 12);
         g.setColor(Color.RED);
         g.setFont(ft);
-
-        for (i = 0; i < width; i++) {
-            for (j = 0; j < height; j++) {
-
-                g.drawImage(grass, (i) * cellWidth + offset_x, (j) * cellHeight + offset_y, cellWidth, cellHeight, this);
-
-                try {
+        
+        try {
+	        for (i = 0; i < width; i++) {
+	            for (j = 0; j < height; j++) {
+	            	
+	            	if (battleField.getFieldCell(i, j).getCost() > 1f)
+	            		g.drawImage(swamp, (i) * cellWidth + offset_x, (j) * cellHeight + offset_y, cellWidth, cellHeight, this);
+	            	else
+	            		g.drawImage(grass, (i) * cellWidth + offset_x, (j) * cellHeight + offset_y, cellWidth, cellHeight, this);
+	                
                     if (battleField.getFieldCell(i, j).getFieldCellType() == FieldCellType.BLOCKED) {
                         g.drawImage(rocks, i * cellWidth + offset_x, j * cellHeight + offset_y, cellWidth, cellHeight,
                                 this);
@@ -147,10 +151,10 @@ public class FieldBoard extends JPanel {
                             g.drawImage(box, i * cellWidth + offset_x, j * cellHeight + offset_y, cellWidth,
                                     cellHeight, this);
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+	            }
+	        }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         Font f = new Font("Times New Roman", Font.PLAIN, 20);

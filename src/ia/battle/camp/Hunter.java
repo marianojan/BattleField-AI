@@ -19,7 +19,6 @@ package ia.battle.camp;
 import ia.battle.camp.actions.Action;
 import ia.battle.camp.actions.Attack;
 import ia.battle.camp.actions.Move;
-import ia.battle.camp.actions.Skip;
 import ia.exceptions.RuleException;
 
 import java.util.ArrayList;
@@ -30,13 +29,11 @@ public class Hunter extends Warrior {
 	private FieldCell position;
 	private Warrior targetWarrior;
 	private int attention;
-	private ArrayList<FieldCell> previousCells;
 	
 	Hunter(String name, int health, int defense, int strength, int speed,
 			int range) throws RuleException {
 		super(name, health, defense, strength, speed, range);
 		
-		previousCells = new ArrayList<FieldCell>();
 	}
 
 	public FieldCell getPosition() {

@@ -73,7 +73,7 @@ public abstract class Warrior {
 		this.initialRange = range;
 
 		int sum = this.health + this.defense + this.strength + this.speed + this.range;
-
+		
 		if (sum > ConfigurationManager.getInstance().getMaxPointsPerWarrior())
 			throw new RuleException();
 

@@ -1,4 +1,4 @@
-file:/C:/Users/Gabriel/Documents/warrior.jar
-warrior.DesicionWarriorManager
-file:/C:/Users/Gabriel/Documents/warrior.jar
-warrior.DesicionWarriorManager
+file:/C:/Users/Gabriel/Documents/putoloco.jar
+ejemplo.WarriorMana
+file:/C:/Users/Gabriel/Documents/putoloco.jar
+ejemplo.WarriorMana
