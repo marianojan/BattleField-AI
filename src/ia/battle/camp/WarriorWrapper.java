@@ -19,6 +19,7 @@ package ia.battle.camp;
 class WarriorWrapper extends Attackable {
 	private Warrior warrior;
 	private float stepsInTurn;
+	private boolean hasBuildWall;
 
 	WarriorWrapper(Warrior warrior) {
 		this.warrior = warrior;
@@ -30,6 +31,7 @@ class WarriorWrapper extends Attackable {
 
 	void startTurn() {
 		stepsInTurn = 0;
+		hasBuildWall = false;
 	}
 
 	void doStep() {
@@ -55,5 +57,11 @@ class WarriorWrapper extends Attackable {
 	@Override
 	public int remainingLive() {
 		return warrior.getHealth();
+	}
+
+	public boolean buildWall() {
+		boolean previousValue = hasBuildWall;
+		hasBuildWall = true;
+		return !previousValue;
 	}
 }

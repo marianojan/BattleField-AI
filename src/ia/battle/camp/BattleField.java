@@ -18,6 +18,7 @@ package ia.battle.camp;
 
 import ia.battle.camp.actions.Action;
 import ia.battle.camp.actions.Attack;
+import ia.battle.camp.actions.BuildWall;
 import ia.battle.camp.actions.Move;
 import ia.battle.camp.actions.Skip;
 import ia.battle.camp.actions.Suicide;
@@ -28,6 +29,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+
+import jdk.management.resource.internal.inst.RandomAccessFileRMHooks;
 
 //TODO: Mines and enemy flags
 
@@ -158,13 +161,17 @@ public class BattleField {
 	 * @return
 	 */
 	boolean isWarriorInRange(Warrior warrior) {
+		return isPositionInRange(warrior.getPosition());
+	}
+	
+	boolean isPositionInRange(FieldCell field) {
 		int centerX = currentWarriorWrapper.getWarrior().getPosition().getX();
 		int centerY = currentWarriorWrapper.getWarrior().getPosition().getY();
 
 		int range = currentWarriorWrapper.getWarrior().getRange();
 
-		int x = warrior.getPosition().getX();
-		int y = warrior.getPosition().getY();
+		int x = field.getX();
+		int y = field.getY();
 
 		if ((Math.pow(centerX - x, 2)) + (Math.pow(centerY - y, 2)) <= Math.pow(range, 2)) {
 			return true;
@@ -172,6 +179,7 @@ public class BattleField {
 
 		return false;
 	}
+	
 
 	/**
 	 * Devuelve si el warrior2 esta en el rango de ataque del warrior1.
@@ -288,7 +296,7 @@ public class BattleField {
 
 		// Create the hunter
 		try {
-			hunter = new Hunter("The Hunter", 10, 10, 1, 10, 5);
+			hunter = new Hunter("The Hunter", 10, 10, 10, 10, 5);
 			hunterWrapper = new WarriorWrapper(hunter);
 		} catch (RuleException e) {
 			// TODO Auto-generated catch block
@@ -335,6 +343,8 @@ public class BattleField {
 						executeSkipAction();
 					} else if (currentWarriorAction instanceof Suicide) {
 						executeSuicideAction();
+					} else if (currentWarriorAction instanceof BuildWall) {
+						executeBuildWallAction((BuildWall)currentWarriorAction);
 					}
 	
 					for (BattleFieldListener listener : listeners)
@@ -363,6 +373,20 @@ public class BattleField {
 			else
 				listener.figthFinished(wm2);
 		}
+	}
+
+	private void executeBuildWallAction(BuildWall build) {
+		
+		if (!isPositionInRange(build.getCellToBuild()))
+			return;
+		
+		if (currentWarriorWrapper.buildWall()) 
+			build.getCellToBuild().setFieldCellType(FieldCellType.BLOCKED);
+		else 
+			return;
+			
+		
+		
 	}
 
 	private void updateWorld() {
@@ -499,25 +523,34 @@ public class BattleField {
 			hunter.wasAttacked(0, currentWarriorWrapper.getWarrior().getPosition());
 			return;
 		}
-
-		float damage = currentWarriorWrapper.getWarrior().getStrength();
-		damage *= (random.nextFloat() / 0.75 + 0.25);
-
-		if (attackedWarrior == null) {
-			FieldCell attackedFieldCell = attack.getCellToAttack();
-			attackedFieldCell.receiveDamage((int) damage);
-
-			return;
-		}
-
+		
 		if (!isWarriorInRange(attackedWarrior))
 			return;
-
+		
+		float damage = currentWarriorWrapper.getWarrior().getStrength();
+		
+		if (attackedWarrior == null && isPositionInRange(attack.getCellToAttack())) {
+			FieldCell attackedFieldCell = attack.getCellToAttack();
+			attackedFieldCell.receiveDamage((int) damage);
+			return;
+		}
+		
+		//TODO: calcular|
+		float distance =  calculateDistance(currentWarriorWrapper.getWarrior().getPosition(), attackedWarrior.getPosition());
+		
+		float range = currentWarriorWrapper.getWarrior().getRange();
+		
+		float distanceFactor = 1 - (distance - 1) / range;
+		
+		damage *= distanceFactor;
+		
 		float defense = attackedWarrior.getDefense();
-		defense *= (random.nextFloat() / 0.75 + 0.25);
+		defense = (float) (defense * (1 - Math.abs(random.nextGaussian())));
 
 		damage -= defense;
 
+//		System.out.println(damage);
+		
 		if (damage > 0) {
 
 			warriors.get(attackedWarrior).receiveDamage((int) damage);
@@ -547,6 +580,15 @@ public class BattleField {
 		return null;
 	}
 
+	public float calculateDistance(FieldCell source, FieldCell target) {
+		double distance;
+		
+		distance = Math.pow(source.getX() - target.getX(), 2) + Math.pow(source.getY() - target.getY(), 2);
+		distance = Math.sqrt(distance);
+		
+		return (float)distance;
+	}
+	
 	public List<FieldCell> getAdjacentCells(FieldCell fieldCell) {
 		ArrayList<FieldCell> adjCells = new ArrayList<FieldCell>();
 

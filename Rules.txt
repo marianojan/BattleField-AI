@@ -31,3 +31,8 @@ Ajustar el rango de ataque a un porcentaje relacion con el tamaño del mapa.
 
 Camino de solo sentido.
 
+Daño en funcion de la distancia.
+
+Build Wall
+
+
