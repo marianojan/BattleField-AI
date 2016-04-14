@@ -14,7 +14,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package ia.battle.camp;
+package ia.battle.core;
 
 import java.util.ArrayList;
 import java.util.Collections;

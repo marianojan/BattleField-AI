@@ -14,14 +14,23 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package ia.battle.camp;
+package ia.battle.core;
 
-/***
- * 
- * @author Gabriel Barrera
- *
- */
- public abstract class Attackable {
-	 abstract void receiveDamage(int damage);
-	 abstract int remainingLive();
+
+public class SpecialItemAttack extends SpecialItem {
+
+    SpecialItemAttack(int value) {
+        super(value);
+    }
+
+    public String toString() {
+        return "A";
+    }
+
+    @Override
+    void affectWarrior(WarriorWrapper warriorWrapper) {
+
+    	warriorWrapper.getWarrior().setStrength(warriorWrapper.getWarrior().getStrength() + value);
+    	
+    }
 }

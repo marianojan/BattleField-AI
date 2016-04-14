@@ -16,9 +16,9 @@
 
 package ia.battle.gui;
 
-import ia.battle.camp.BattleField;
-import ia.battle.camp.ConfigurationManager;
-import ia.battle.camp.FieldCellType;
+import ia.battle.core.BattleField;
+import ia.battle.core.ConfigurationManager;
+import ia.battle.core.FieldCellType;
 import ia.exceptions.OutOfMapException;
 
 import java.awt.Color;

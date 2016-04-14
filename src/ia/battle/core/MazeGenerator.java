@@ -1,4 +1,4 @@
-package ia.battle.camp;
+package ia.battle.core;
 
 import java.util.Arrays;
 import java.util.Collections;

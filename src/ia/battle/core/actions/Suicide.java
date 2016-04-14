@@ -13,8 +13,10 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
- package ia.battle.camp.actions;
+package ia.battle.core.actions;
 
-public abstract class Action {
+
+
+public final class Suicide extends Action {
 
 }

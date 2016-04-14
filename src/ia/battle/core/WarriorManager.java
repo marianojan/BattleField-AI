@@ -1,4 +1,5 @@
-/* Copyright (c) 2012-2013, Ing. Gabriel Barrera <gmbarrera@gmail.com>
+/*
+ * Copyright (c) 2012-2014, Ing. Gabriel Barrera <gmbarrera@gmail.com>
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above 
@@ -13,9 +14,26 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package ia.battle.camp.actions;
+package ia.battle.core;
 
+import ia.exceptions.RuleException;
 
-public final class Skip extends Action {
+public abstract class WarriorManager {
+	
+	private int count;
+	
+	public abstract String getName();
+	
+	public abstract Warrior getNextWarrior() throws RuleException;
 
+	public final Warrior getNewWarrior() throws RuleException {
+		count++;
+		Warrior warrior = this.getNextWarrior();
+		warrior.setWarriorManager(this);
+		return warrior;
+	}
+
+	public int getCount() {
+		return count;
+	}
 }

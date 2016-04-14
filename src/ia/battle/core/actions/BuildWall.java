@@ -1,6 +1,6 @@
-package ia.battle.camp.actions;
+package ia.battle.core.actions;
 
-import ia.battle.camp.FieldCell;
+import ia.battle.core.FieldCell;
 
 public final class BuildWall extends Action {
 	private FieldCell cellToBuild;

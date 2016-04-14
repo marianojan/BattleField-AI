@@ -14,7 +14,8 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package ia.battle.camp;
+package ia.battle.core;
+
 
 public class FieldCell extends Attackable {
 	private int x, y;
@@ -38,6 +39,10 @@ public class FieldCell extends Attackable {
 
 	void setFieldCellType(FieldCellType fieldCellType) {
 		this.fieldCellType = fieldCellType;
+	}
+	
+	void setHitPoints(int hitPoints) {
+		this.hitPoints = hitPoints;
 	}
 	
 	SpecialItem getSpecialItem() {

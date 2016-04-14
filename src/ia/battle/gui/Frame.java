@@ -16,7 +16,7 @@
 
 package ia.battle.gui;
 
-import ia.battle.camp.BattleField;
+import ia.battle.core.BattleField;
 
 import javax.swing.JFrame;
 

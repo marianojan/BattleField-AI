@@ -14,9 +14,9 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package ia.battle.camp;
+package ia.battle.core;
 
-import ia.battle.camp.actions.Action;
+import ia.battle.core.actions.Action;
 import ia.exceptions.RuleException;
 
 public abstract class Warrior {

@@ -14,11 +14,11 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package ia.battle.camp;
+package ia.battle.core;
 
-import ia.battle.camp.actions.Action;
-import ia.battle.camp.actions.Attack;
-import ia.battle.camp.actions.Move;
+import ia.battle.core.actions.Action;
+import ia.battle.core.actions.Attack;
+import ia.battle.core.actions.Move;
 import ia.exceptions.RuleException;
 
 import java.util.ArrayList;

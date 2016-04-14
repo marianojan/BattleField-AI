@@ -1,5 +1,4 @@
-/*
- * Copyright (c) 2012, Ing. Gabriel Barrera <gmbarrera@gmail.com>
+/* Copyright (c) 2012-2014, Ing. Gabriel Barrera <gmbarrera@gmail.com>
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above 
@@ -14,11 +13,18 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package ia.battle.camp;
+package ia.battle.core.actions;
 
-public enum FieldCellType {
+import ia.battle.core.FieldCell;
+
+public final class Attack extends Action {
+	private FieldCell cellToAttack;
 	
-	NORMAL,
-	BLOCKED
+	public Attack(FieldCell cellToAttack) {
+		this.cellToAttack = cellToAttack;
+	}
 	
+	public FieldCell getCellToAttack() {
+		return cellToAttack;
+	}
 }

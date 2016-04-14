@@ -14,21 +14,44 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package ia.battle.camp;
+package ia.battle.core;
 
-public class SpecialItemDefense extends SpecialItem {
-    
-    SpecialItemDefense(int value) {
-        super(value);
-    }
+public class WarriorData {
+	private FieldCell fieldCell;
+	private int health;
+	private String name;
+	private boolean inRange;
+	private int warriorNumber;
 
-    public String toString() {
-        return "D";
-    }
+	WarriorData(FieldCell fieldCell, int health, String name, boolean inRange, int warriorNumber) {
+		this.fieldCell = fieldCell;
+		this.health = health;
+		this.name = name;
+		this.inRange = inRange;
+		this.warriorNumber = warriorNumber;
+	}
 
-    @Override
-    void affectWarrior(WarriorWrapper warriorWrapper) {
-    	warriorWrapper.getWarrior().setDefense(warriorWrapper.getWarrior().getDefense() + value);
-    }
+	/**
+	 * Return the enemy's position
+	 * @return
+	 */
+	public FieldCell getFieldCell() {
+		return fieldCell;
+	}
 
+	public int getHealth() {
+		return health;
+	}
+
+	public String getName() {
+		return name;
+	}
+	
+	public boolean getInRange() {
+	    return inRange;
+	}
+	
+	public int getWarriorNumber() {
+		return warriorNumber;
+	}
 }

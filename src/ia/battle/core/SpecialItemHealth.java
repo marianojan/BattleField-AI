@@ -1,4 +1,5 @@
-/* Copyright (c) 2012-2014, Ing. Gabriel Barrera <gmbarrera@gmail.com>
+/*
+ * Copyright (c) 2012-2014, Ing. Gabriel Barrera <gmbarrera@gmail.com>
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above 
@@ -13,14 +14,22 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package ia.battle.camp.actions;
+package ia.battle.core;
 
-import ia.battle.camp.FieldCell;
 
-import java.util.ArrayList;
+public class SpecialItemHealth extends SpecialItem {
+    
+    public SpecialItemHealth(int value) {
+        super(value);
+    }
+    
+    public String toString() {
+        return "H";
+    }
 
-public abstract class Move extends Action {
-	
-	public abstract ArrayList<FieldCell> move();
-
+    void affectWarrior(WarriorWrapper warriorWrapper) {
+        
+    	warriorWrapper.getWarrior().setHealth(warriorWrapper.getWarrior().getHealth() + value);
+        
+    }
 }

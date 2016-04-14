@@ -14,7 +14,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package ia.battle.camp;
+package ia.battle.core;
 
 //TODO: Read parameters from archive
 
@@ -41,7 +41,7 @@ public final class ConfigurationManager {
 	}
 	
 	public int getTurnsToShrink() {
-		return 5000;
+		return 1000;
 	}
 	
 	public int getActionsPerTurn() {

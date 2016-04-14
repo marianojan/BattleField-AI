@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2015, Ing. Gabriel Barrera <gmbarrera@gmail.com>
+ * Copyright (c) 2012-2016, Ing. Gabriel Barrera <gmbarrera@gmail.com>
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above 
@@ -14,23 +14,20 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package ia.battle.camp;
+package ia.battle.core;
 
-import ia.battle.camp.actions.Action;
-import ia.battle.camp.actions.Attack;
-import ia.battle.camp.actions.BuildWall;
-import ia.battle.camp.actions.Move;
-import ia.battle.camp.actions.Skip;
-import ia.battle.camp.actions.Suicide;
-import ia.exceptions.OutOfMapException;
+import ia.battle.core.actions.Action;
+import ia.battle.core.actions.Attack;
+import ia.battle.core.actions.BuildWall;
+import ia.battle.core.actions.Move;
+import ia.battle.core.actions.Skip;
+import ia.battle.core.actions.Suicide;
 import ia.exceptions.RuleException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
-
-import jdk.management.resource.internal.inst.RandomAccessFileRMHooks;
 
 //TODO: Mines and enemy flags
 
@@ -51,7 +48,9 @@ public class BattleField {
 
 	private long tick;
 	private boolean inFight;
-
+	private boolean sideToShrink;
+	private int leftColumnToShrink, rightColumnToShrink;
+	
 	private Hunter hunter;
 
 	private WarriorManager wm1, wm2;
@@ -283,6 +282,10 @@ public class BattleField {
 
 		tick = 0;
 		inFight = true;
+		
+		sideToShrink = false;
+		leftColumnToShrink = 0;
+		rightColumnToShrink = ConfigurationManager.getInstance().getMapWidth() - 1;
 
 		int actionPerTurns = ConfigurationManager.getInstance().getActionsPerTurn();
 		int warriorPerBattle = ConfigurationManager.getInstance().getMaxWarriorPerBattle();
@@ -384,18 +387,54 @@ public class BattleField {
 			build.getCellToBuild().setFieldCellType(FieldCellType.BLOCKED);
 		else 
 			return;
-			
-		
-		
 	}
 
 	private void updateWorld() {
 
 //		if (random.nextInt(100) < 3)
 //			changeWorld();
-//
-//		if (random.nextInt(100) == 0)
-//			addNewSpecialItem();
+
+		if (random.nextInt(100) == 0)
+			addNewSpecialItem();
+		
+		if (ConfigurationManager.getInstance().getTurnsToShrink() < this.tick && this.tick % 25 == 0) {
+			shrinkWorld();
+		}
+	}
+
+	private void shrinkWorld() {
+		int columnToShrink;
+		
+		if (sideToShrink) {			
+			//Right side	
+			columnToShrink = rightColumnToShrink--;
+		} else {
+			//Left side
+			columnToShrink = leftColumnToShrink++;
+		}
+		
+		for(int i = 0; i < ConfigurationManager.getInstance().getMapHeight(); i++) {
+			cells[columnToShrink][i].setFieldCellType(FieldCellType.BLOCKED);
+			cells[columnToShrink][i].setHitPoints(Integer.MAX_VALUE);
+			
+			for(WarriorWrapper w : warriors.values()) {
+				if (w.getWarrior().getPosition().equals(cells[columnToShrink][i])) {
+					
+					//TODO: Empujar warriors
+					
+					
+					w.receiveDamage(1000);
+				}
+			}
+		}
+		
+		//TODO: 
+		if (leftColumnToShrink == rightColumnToShrink) {
+			System.out.println("GAME OVER!!!");
+		}
+		
+		
+		sideToShrink = !sideToShrink;
 	}
 
 	private void addNewSpecialItem() {
@@ -535,7 +574,6 @@ public class BattleField {
 			return;
 		}
 		
-		//TODO: calcular|
 		float distance =  calculateDistance(currentWarriorWrapper.getWarrior().getPosition(), attackedWarrior.getPosition());
 		
 		float range = currentWarriorWrapper.getWarrior().getRange();
@@ -549,8 +587,6 @@ public class BattleField {
 
 		damage -= defense;
 
-//		System.out.println(damage);
-		
 		if (damage > 0) {
 
 			warriors.get(attackedWarrior).receiveDamage((int) damage);
@@ -621,8 +657,6 @@ public class BattleField {
 
 		return adjCells;
 	}
-
-	// TODO: Para determinar costo tomar el valor del fieldcell
 
 	private void executeMoveAction(Move action) {
 
@@ -697,6 +731,8 @@ public class BattleField {
 	}
 
 	public void addListener(BattleFieldListener listener) {
-		listeners.add(listener);
+		if (!listeners.contains(listener))
+			listeners.add(listener);
 	}
+	
 }

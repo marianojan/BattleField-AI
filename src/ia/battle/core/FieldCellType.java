@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2014, Ing. Gabriel Barrera <gmbarrera@gmail.com>
+ * Copyright (c) 2012, Ing. Gabriel Barrera <gmbarrera@gmail.com>
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above 
@@ -14,22 +14,11 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package ia.battle.camp;
+package ia.battle.core;
 
-public class SpecialItemRange extends SpecialItem {
-
-    SpecialItemRange(int value) {
-        super(value);
-    }
-
-    public String toString() {
-        return "R";
-    }
-
-    @Override
-    void affectWarrior(WarriorWrapper warriorWrapper) {
-    	warriorWrapper.getWarrior().setRange(warriorWrapper.getWarrior().getRange() + value);
-        
-    }
-
+public enum FieldCellType {
+	
+	NORMAL,
+	BLOCKED
+	
 }

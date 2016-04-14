@@ -1,4 +1,5 @@
-/* Copyright (c) 2012-2013, Ing. Gabriel Barrera <gmbarrera@gmail.com>
+/*
+ * Copyright (c) 2012-2014, Ing. Gabriel Barrera <gmbarrera@gmail.com>
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above 
@@ -13,10 +14,22 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package ia.battle.camp.actions;
+package ia.battle.core;
 
 
+public class SpecialItemSpeed extends SpecialItem {
 
-public final class Suicide extends Action {
+    SpecialItemSpeed(int value) {
+        super(value);
+    }
+
+    public String toString() {
+        return "S";
+    }
+
+    @Override
+    void affectWarrior(WarriorWrapper warriorWrapper) {
+    	warriorWrapper.getWarrior().setSpeed(warriorWrapper.getWarrior().getSpeed() + value);
+    }
 
 }

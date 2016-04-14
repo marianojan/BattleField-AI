@@ -16,8 +16,8 @@
 
 package ia.battle.gui;
 
-import ia.battle.camp.WarriorLoader;
-import ia.battle.camp.WarriorManager;
+import ia.battle.core.WarriorLoader;
+import ia.battle.core.WarriorManager;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;

@@ -14,21 +14,22 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package ia.battle.camp;
+package ia.battle.core;
 
-public class SpecialItemSpeed extends SpecialItem {
 
-    SpecialItemSpeed(int value) {
+public class SpecialItemDefense extends SpecialItem {
+    
+    SpecialItemDefense(int value) {
         super(value);
     }
 
     public String toString() {
-        return "S";
+        return "D";
     }
 
     @Override
     void affectWarrior(WarriorWrapper warriorWrapper) {
-    	warriorWrapper.getWarrior().setSpeed(warriorWrapper.getWarrior().getSpeed() + value);
+    	warriorWrapper.getWarrior().setDefense(warriorWrapper.getWarrior().getDefense() + value);
     }
 
 }

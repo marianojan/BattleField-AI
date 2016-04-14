@@ -16,12 +16,12 @@
 
 package ia.battle.gui;
 
-import ia.battle.camp.BattleField;
-import ia.battle.camp.BattleFieldListener;
-import ia.battle.camp.FieldCell;
-import ia.battle.camp.Warrior;
-import ia.battle.camp.WarriorLoader;
-import ia.battle.camp.WarriorManager;
+import ia.battle.core.BattleField;
+import ia.battle.core.BattleFieldListener;
+import ia.battle.core.FieldCell;
+import ia.battle.core.Warrior;
+import ia.battle.core.WarriorLoader;
+import ia.battle.core.WarriorManager;
 import ia.battle.gui.components.FightButton;
 import ia.battle.sound.DefaultSoundPlayer;
 import ia.battle.sound.SoundPlayer;
@@ -58,7 +58,9 @@ public class BattleFieldSetup extends JFrame {
 	private Frame frame;
 	private boolean inFight;
 	private SoundPlayer soundPlayer;
-		
+
+	private BattleFieldListener battleFieldListener;
+	
 	public BattleFieldSetup() {
 
 		title = new JLabel("IA - Battle Field Agents", JLabel.CENTER);
@@ -70,20 +72,17 @@ public class BattleFieldSetup extends JFrame {
 		panel.setBorder(BorderFactory.createEtchedBorder());
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-		finderWarriorManager1 = new ClassFinder(
-				"Seleccione el .jar del Warrior Manager 1");
+		finderWarriorManager1 = new ClassFinder("Seleccione el .jar del Warrior Manager 1");
 		panel.add(finderWarriorManager1);
 
-		finderWarriorManager2 = new ClassFinder(
-				"Seleccione el .jar del Warrior Manager 2");
+		finderWarriorManager2 = new ClassFinder("Seleccione el .jar del Warrior Manager 2");
 		panel.add(finderWarriorManager2);
 
 		this.add(panel);
 
 		loadJarSelection();
 
-		startFight = new FightButton(finderWarriorManager1,
-				finderWarriorManager2);
+		startFight = new FightButton(finderWarriorManager1, finderWarriorManager2);
 		startFight.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
@@ -93,6 +92,115 @@ public class BattleFieldSetup extends JFrame {
 		startFight.updateEnabledStatus();
 
 		soundPlayer = new DefaultSoundPlayer();
+
+		battleFieldListener = new BattleFieldListener() {
+
+			@Override
+			public void startFight() {
+
+				inFight = true;
+
+				if (frame != null) {
+					frame.dispose();
+					frame = null;
+				}
+
+				frame = new Frame(BattleField.getInstance(), 16, 16);
+				frame.setSize(1024, 720);
+				frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+				frame.setVisible(true);
+
+				frame.addWindowListener(new WindowListener() {
+
+					@Override
+					public void windowActivated(WindowEvent arg0) {
+					}
+
+					@Override
+					public void windowClosed(WindowEvent arg0) {
+					}
+
+					@Override
+					public void windowClosing(WindowEvent arg0) {
+
+						if (JOptionPane.showConfirmDialog(frame, "Está seguro de finalizar la batalla?", "Confirme Acción",
+								JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
+							inFight = false;
+							frame.dispose();
+						}
+					}
+
+					@Override
+					public void windowDeactivated(WindowEvent arg0) {
+					}
+
+					@Override
+					public void windowDeiconified(WindowEvent arg0) {
+					}
+
+					@Override
+					public void windowIconified(WindowEvent arg0) {
+					}
+
+					@Override
+					public void windowOpened(WindowEvent arg0) {
+					}
+
+				});
+			}
+
+			public void tickLapsed(long tick) {
+
+			}
+
+			public void turnLapsed(long tick, int turnNumber, Warrior warrior) {
+				frame.repaint();
+			}
+
+			public boolean continueFighting() {
+				return inFight;
+			}
+
+			public void warriorAttacked(Warrior attacked, Warrior attacker, int damage) {
+				// soundPlayer.playAttack();
+			}
+
+			@Override
+			public void warriorKilled(Warrior killed) {
+				// soundPlayer.playBotKilled();
+			}
+
+			@Override
+			public void warriorMoved(Warrior warrior, FieldCell from, FieldCell to) {
+
+			}
+
+			@Override
+			public void figthFinished(WarriorManager winner) {
+				inFight = false;
+				if (winner != null) {
+					System.out.println("The winner is " + winner.getName());
+					JOptionPane.showMessageDialog(null, "The winner is " + winner.getName());
+				}
+			}
+
+			@Override
+			public void worldChanged(FieldCell oldCell, FieldCell newCell) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void statsChanged(String managerName1, int warriorsKilled1, String managerName2, int warriorsKilled2) {
+
+				frame.getFieldBoard().setWarriorManagerName1(managerName1);
+				frame.getFieldBoard().setWarriorManagerName2(managerName2);
+				frame.getFieldBoard().setWarriorsKilled1(warriorsKilled1);
+				frame.getFieldBoard().setWarriorsKilled2(warriorsKilled2);
+
+			}
+
+		};
 		
 		this.add(startFight, BorderLayout.SOUTH);
 	}
@@ -106,133 +214,15 @@ public class BattleFieldSetup extends JFrame {
 
 		try {
 
-			wm = warriorLoader.createWarriorManager(
-					finderWarriorManager1.getSelectedJarFile(),
-					finderWarriorManager1.getSelectedClassName());
+			wm = warriorLoader.createWarriorManager(finderWarriorManager1.getSelectedJarFile(), finderWarriorManager1.getSelectedClassName());
 
 			BattleField.getInstance().addWarriorManager(wm);
 
-			wm = warriorLoader.createWarriorManager(
-					finderWarriorManager2.getSelectedJarFile(),
-					finderWarriorManager2.getSelectedClassName());
+			wm = warriorLoader.createWarriorManager(finderWarriorManager2.getSelectedJarFile(), finderWarriorManager2.getSelectedClassName());
 
 			BattleField.getInstance().addWarriorManager(wm);
 
-			BattleField.getInstance().addListener(new BattleFieldListener() {
-
-				@Override
-				public void startFight() {
-
-					inFight = true;
-
-					if (frame != null) {
-						frame.dispose();
-						frame = null;
-					}
-
-					frame = new Frame(BattleField.getInstance(), 16, 16);
-					frame.setSize(1024, 720);
-					frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-					frame.setVisible(true);
-
-					frame.addWindowListener(new WindowListener() {
-
-						@Override
-						public void windowActivated(WindowEvent arg0) {
-						}
-
-						@Override
-						public void windowClosed(WindowEvent arg0) {
-						}
-
-						@Override
-						public void windowClosing(WindowEvent arg0) {
-
-							if (JOptionPane.showConfirmDialog(frame,
-									"Está seguro de finalizar la batalla?",
-									"Confirme Acción",
-									JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
-								inFight = false;
-								frame.dispose();
-							}
-						}
-
-						@Override
-						public void windowDeactivated(WindowEvent arg0) {
-						}
-
-						@Override
-						public void windowDeiconified(WindowEvent arg0) {
-						}
-
-						@Override
-						public void windowIconified(WindowEvent arg0) {
-						}
-
-						@Override
-						public void windowOpened(WindowEvent arg0) {
-						}
-
-					});
-				}
-
-				public void tickLapsed(long tick) {
-
-				}
-
-				public void turnLapsed(long tick, int turnNumber,
-						Warrior warrior) {
-					frame.repaint();
-				}
-
-				public boolean continueFighting() {
-					return inFight;
-				}
-
-				public void warriorAttacked(Warrior attacked, Warrior attacker,
-						int damage) {
-				//	soundPlayer.playAttack();
-				}
-
-				@Override
-				public void warriorKilled(Warrior killed) {
-				//	soundPlayer.playBotKilled();
-				}
-				
-				@Override
-				public void warriorMoved(Warrior warrior, FieldCell from,
-						FieldCell to) {
-
-				}
-
-				@Override
-				public void figthFinished(WarriorManager winner) {
-					inFight = false;
-					if (winner != null) {
-						System.out.println("The winner is " + winner.getName());
-						JOptionPane.showMessageDialog(null, "The winner is "
-								+ winner.getName());
-					}
-				}
-
-				@Override
-				public void worldChanged(FieldCell oldCell, FieldCell newCell) {
-					// TODO Auto-generated method stub
-					
-				}
-
-				@Override
-				public void statsChanged(String managerName1, int warriorsKilled1, String managerName2, int warriorsKilled2) {
-					
-					frame.getFieldBoard().setWarriorManagerName1(managerName1);
-					frame.getFieldBoard().setWarriorManagerName2(managerName2);
-					frame.getFieldBoard().setWarriorsKilled1(warriorsKilled1);
-					frame.getFieldBoard().setWarriorsKilled2(warriorsKilled2);
-					
-				}
-
-				
-			});
+			BattleField.getInstance().addListener(battleFieldListener);
 
 			startFight.setEnabled(false);
 

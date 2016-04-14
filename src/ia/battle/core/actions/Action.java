@@ -1,5 +1,4 @@
-/*
- * Copyright (c) 2012-2014, Ing. Gabriel Barrera <gmbarrera@gmail.com>
+/* Copyright (c) 2012-2013, Ing. Gabriel Barrera <gmbarrera@gmail.com>
  * 
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above 
@@ -14,15 +13,8 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package ia.battle.camp;
+ package ia.battle.core.actions;
 
-public abstract class SpecialItem {
-    int value;
-    
-    SpecialItem(int value) {
-        this.value = value;
-    }
-    
-    abstract void affectWarrior(WarriorWrapper warriorWrapper);
+public abstract class Action {
 
 }

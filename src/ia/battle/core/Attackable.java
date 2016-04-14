@@ -14,26 +14,14 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package ia.battle.camp;
+package ia.battle.core;
 
-import ia.exceptions.RuleException;
-
-public abstract class WarriorManager {
-	
-	private int count;
-	
-	public abstract String getName();
-	
-	public abstract Warrior getNextWarrior() throws RuleException;
-
-	public final Warrior getNewWarrior() throws RuleException {
-		count++;
-		Warrior warrior = this.getNextWarrior();
-		warrior.setWarriorManager(this);
-		return warrior;
-	}
-
-	public int getCount() {
-		return count;
-	}
+/***
+ * 
+ * @author Gabriel Barrera
+ *
+ */
+ public abstract class Attackable {
+	 abstract void receiveDamage(int damage);
+	 abstract int remainingLive();
 }
