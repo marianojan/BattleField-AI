@@ -19,8 +19,8 @@ package ia.battle.core;
 import java.util.Random;
 
 /*
- +       -
- 90      10
+ 			  +       -
+ 			 90      10
 
  vida        20      10
  defensa     20      20

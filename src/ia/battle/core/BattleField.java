@@ -28,12 +28,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 //TODO: Mines and enemy flags
 
 //TODO: Las cajas no reaparecen al iniciar una nueva batalla sin cerrar la aplicacion
-
-//TODO: Hunters
 
 //TODO: Cambio de warriors
 
@@ -81,12 +86,12 @@ public class BattleField {
 		for (int i = 0; i < width; i++)
 			for (int j = 0; j < height; j++) {
 
-				if (maze[i][j] == 1)
+				if (maze[i][j] == 1)	//Wall
 					cells[i][j] = new FieldCell(FieldCellType.BLOCKED, i, j, null, Float.POSITIVE_INFINITY);
 				else {
 					float cost = 1f;
 					
-					if (random.nextGaussian() > 2f)
+					if (maze[i][j] == 2)	//Swamp
 						cost = 1.5f;
 					
 					cells[i][j] = new FieldCell(FieldCellType.NORMAL, i, j,
@@ -214,9 +219,12 @@ public class BattleField {
 
 		for (int i = 0; i < configurationManager.getMapWidth(); i++)
 			for (int j = 0; j < configurationManager.getMapHeight(); j++)
-				if (cells[i][j].getSpecialItem() != null)
+				if (cells[i][j].getSpecialItem() != null &&
+				    isPositionInRange(cells[i][j])) {
+					
 					items.add(cells[i][j]);
-
+				}
+		
 		return items;
 	}
 
@@ -320,6 +328,125 @@ public class BattleField {
 
 			currentWarriorWrapper = turnController.nextWarriorWrapper();
 			
+			//System.out.println("Juega: " +currentWarriorWrapper.getWarrior().getName());
+			
+			if (currentWarriorWrapper.getWarrior().getHealth() <= 0) {
+				//TODO: Change for multiple warriors
+				if (currentWarriorWrapper == warriorWrapper1) 
+					turnController.replaceWarrior(warriorWrapper1, warriorWrapper1 = requestNextWarrior(wm1));
+				else if (currentWarriorWrapper == warriorWrapper2) 
+					turnController.replaceWarrior(warriorWrapper2, warriorWrapper2 = requestNextWarrior(wm2));
+				
+				for (BattleFieldListener listener : listeners)
+					listener.statsChanged(wm1.getName(), wm1.getCount(), wm2.getName(), wm2.getCount());
+				
+			} else {
+				
+				currentWarriorWrapper.startTurn();
+	
+				for (int i = 0; i < actionPerTurns; i++) {
+					
+					ExecutorService executor = Executors.newSingleThreadExecutor();
+					Future<Action> future = executor.submit(new PlayTurnExecutor(currentWarriorWrapper, tick, i));
+					
+					try {
+						currentWarriorAction = future.get(2, TimeUnit.SECONDS);
+					} catch (InterruptedException | ExecutionException | TimeoutException e) {
+						future.cancel(true);
+						currentWarriorWrapper.receiveDamage(1000);
+						System.out.println("KILLED FOR TIMEOUT");
+						break;
+					}
+					
+					executor.shutdownNow();
+					
+					
+					if (currentWarriorAction instanceof Move) {
+						executeMoveAction((Move) currentWarriorAction);
+					} else if (currentWarriorAction instanceof Attack) {
+						executeAttackAction((Attack) currentWarriorAction);
+					} else if (currentWarriorAction instanceof Skip) {
+						executeSkipAction();
+					} else if (currentWarriorAction instanceof Suicide) {
+						executeSuicideAction();
+					} else if (currentWarriorAction instanceof BuildWall) {
+						executeBuildWallAction((BuildWall)currentWarriorAction);
+					}
+	
+					for (BattleFieldListener listener : listeners)
+						listener.turnLapsed(tick, i, currentWarriorWrapper.getWarrior());
+	
+					try {
+						Thread.sleep(20);
+					} catch (InterruptedException ex) {
+						Thread.currentThread().interrupt();
+					}
+				}
+			}
+
+			updateWorld();
+
+			for (BattleFieldListener listener : listeners)
+				inFight &= listener.continueFighting();
+
+			inFight &= (wm1.getCount() <= warriorPerBattle && wm2.getCount() <= warriorPerBattle);
+
+		} while (inFight);
+
+		for (BattleFieldListener listener : listeners) {
+			if (wm1.getCount() < wm2.getCount())
+				listener.figthFinished(wm1);
+			else
+				listener.figthFinished(wm2);
+		}
+	}
+
+	public void fightInRealTime() {
+		TurnController turnController;
+		Action currentWarriorAction;
+
+		tick = 0;
+		inFight = true;
+		
+		sideToShrink = false;
+		leftColumnToShrink = 0;
+		rightColumnToShrink = ConfigurationManager.getInstance().getMapWidth() - 1;
+
+		int actionPerTurns = ConfigurationManager.getInstance().getActionsPerTurn();
+		int warriorPerBattle = ConfigurationManager.getInstance().getMaxWarriorPerBattle();
+
+		initCells();
+
+		warriors = new HashMap<Warrior, WarriorWrapper>();
+
+		warriorWrapper1 = requestNextWarrior(wm1);
+		warriorWrapper2 = requestNextWarrior(wm2);
+
+		// Create the hunter
+		try {
+			hunter = new Hunter("The Hunter", 10, 10, 10, 10, 5);
+			hunterWrapper = new WarriorWrapper(hunter);
+		} catch (RuleException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		hunter.setPosition(getFreeCell());
+		
+		turnController = new TurnController(warriorWrapper1, warriorWrapper2, hunterWrapper);
+		
+		for (BattleFieldListener listener : listeners)
+			listener.startFight();
+		
+		for (BattleFieldListener listener : listeners)
+			listener.statsChanged(wm1.getName(), wm1.getCount(), wm2.getName(), wm2.getCount());
+		
+		do {
+			tick++;
+
+			currentWarriorWrapper = turnController.nextWarriorWrapper();
+			
+			System.out.println("Juega: " +currentWarriorWrapper.getWarrior().getName());
+			
 			if (currentWarriorWrapper.getWarrior().getHealth() <= 0) {
 				//TODO: Change for multiple warriors
 				if (currentWarriorWrapper == warriorWrapper1) 
@@ -354,7 +481,7 @@ public class BattleField {
 						listener.turnLapsed(tick, i, currentWarriorWrapper.getWarrior());
 	
 					 try {
-						 Thread.sleep(50);
+						 Thread.sleep(20);
 					 } catch (InterruptedException ex) {
 						 Thread.currentThread().interrupt();
 					 }
@@ -378,6 +505,7 @@ public class BattleField {
 		}
 	}
 
+	
 	private void executeBuildWallAction(BuildWall build) {
 		
 		if (!isPositionInRange(build.getCellToBuild()))
@@ -563,7 +691,7 @@ public class BattleField {
 			return;
 		}
 		
-		if (!isWarriorInRange(attackedWarrior))
+		if (!canFire(currentWarriorWrapper.getWarrior().getPosition(), attackedWarrior.getPosition()))
 			return;
 		
 		float damage = currentWarriorWrapper.getWarrior().getStrength();
@@ -573,6 +701,9 @@ public class BattleField {
 			attackedFieldCell.receiveDamage((int) damage);
 			return;
 		}
+		
+		if (!isWarriorInRange(attackedWarrior))
+			return;
 		
 		float distance =  calculateDistance(currentWarriorWrapper.getWarrior().getPosition(), attackedWarrior.getPosition());
 		
@@ -604,6 +735,17 @@ public class BattleField {
 					listener.warriorKilled(attackedWarrior);
 			}
 		}
+	}
+
+	private boolean canFire(FieldCell source, FieldCell target) {
+
+		
+		
+		
+		
+		
+		
+		return true;
 	}
 
 	private Warrior findWarriorInMap(FieldCell cellToAttack) {
@@ -659,7 +801,7 @@ public class BattleField {
 	}
 
 	private void executeMoveAction(Move action) {
-
+		try {
 		ArrayList<FieldCell> currentWarriorActionsMoveCells;
 		currentWarriorActionsMoveCells = action.move();
 
@@ -682,9 +824,12 @@ public class BattleField {
 
 			List<FieldCell> adj = getAdjacentCells(previousCell);
 			if (!adj.contains(fieldCell)) {
-				currentWarriorWrapper.receiveDamage(currentWarriorWrapper.getWarrior().getHealth());
-				System.err.println("Esta trampeando " + currentWarriorWrapper.getWarrior().getName() + "!!!! " + previousCell + " -> " + fieldCell);
-				break;
+				if (fieldCell != previousCell) {
+					currentWarriorWrapper.receiveDamage(currentWarriorWrapper.getWarrior().getHealth());
+					System.err.println("Esta trampeando " + currentWarriorWrapper.getWarrior().getName() + "!!!! " + previousCell + " -> " + fieldCell);
+					break;
+				}
+				
 			}
 			
 			if (currentWarriorWrapper.getSteps() > currentWarriorWrapper.getWarrior().getSpeed() / 5)
@@ -709,6 +854,10 @@ public class BattleField {
 				e.printStackTrace();
 			}
 	
+		}
+		} catch (Exception e) {
+			System.err.println("Fuite amego: " +currentWarriorWrapper.getWarrior().getName());
+			throw e;
 		}
 	}
 
@@ -735,4 +884,21 @@ public class BattleField {
 			listeners.add(listener);
 	}
 	
+}
+
+class PlayTurnExecutor implements Callable<Action> {
+	private WarriorWrapper warriorWrapper;
+	private long tick;
+	private int actionNumber;
+	
+	public PlayTurnExecutor(WarriorWrapper warriorWrapper, long tick, int actionNumber) {
+		this.warriorWrapper = warriorWrapper;
+		this.tick = tick;
+		this.actionNumber = actionNumber;
+	}
+	
+	@Override
+	public Action call() throws Exception {
+		return warriorWrapper.getWarrior().playTurn(tick, actionNumber);
+	}
 }
